@@ -4,10 +4,12 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
 
+import Cheque from './Cheque';
 import User from './User';
 
 @Entity('clients')
@@ -42,6 +44,9 @@ class Client {
   @ManyToOne(() => User, (user) => user.clients)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @OneToMany(() => Cheque, (cheque: Cheque) => cheque.client)
+  public cheque: Cheque[];
 
   @CreateDateColumn()
   created_at: Date;
