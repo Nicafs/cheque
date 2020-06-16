@@ -7,8 +7,8 @@ import ChequesRepository from '../repositories/ChequesRepository';
 import BancosRepository from '../repositories/BancosRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
 
-
 interface Request {
+  id: string;
   client_id: string;
   banco_id: string;
   agencia: number;
@@ -23,8 +23,9 @@ interface Request {
   emitente: string;
 }
 
-class CreateChequeService {
+class UpdateChequeService {
   public async execute({
+    id,
     client_id,
     banco_id,
     agencia,
@@ -40,10 +41,18 @@ class CreateChequeService {
   }: Request): Promise<Cheque> {
     const chequesRepository = getCustomRepository(ChequesRepository);
 
-    const findChequeNumero = await chequesRepository.findByCheque(numero);
+    const chequePrev = await chequesRepository.findOne(id);
 
-    if (findChequeNumero) {
-      throw new AppError('Já existe o Número do Cheque Cadastrado');
+    if(!chequePrev) {
+        throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    }
+
+    if(chequePrev.numero !== numero) {
+        const findChequeNumero = await chequesRepository.findByCheque(numero);
+
+        if (findChequeNumero) {
+        throw new AppError('Já existe o Número do Cheque Cadastrado');
+        }
     }
 
     const bancosRepository = getCustomRepository(BancosRepository);
@@ -51,25 +60,27 @@ class CreateChequeService {
     const clientsRepository = getCustomRepository(ClientsRepository);
     const client = await clientsRepository.findOne(client_id);
 
-    const cheque = chequesRepository.create({
-      client,
-      banco,
-      agencia,
-      conta,
-      numero,
-      situacao,
-      dias,
-      data_vencimento,
-      data_quitacao,
-      valor_operacao,
-      valor_encargos,
-      emitente,
-    });
+    if(banco) {
+      chequePrev.banco = banco;
+    }
+    if(client) {
+      chequePrev.client = client;
+    }
+    chequePrev.agencia = agencia;
+    chequePrev.conta = conta;
+    chequePrev.numero = numero;
+    chequePrev.situacao = situacao;
+    chequePrev.dias = dias;
+    chequePrev.data_vencimento = data_vencimento;
+    chequePrev.data_quitacao = data_quitacao;
+    chequePrev.valor_operacao = valor_operacao;
+    chequePrev.valor_encargos = valor_encargos;
+    chequePrev.emitente = emitente;
 
-    await chequesRepository.save(cheque);
+    const cheque =  await chequesRepository.save(chequePrev);
 
     return cheque;
   }
 }
 
-export default CreateChequeService;
+export default UpdateChequeService;

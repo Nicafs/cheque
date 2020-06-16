@@ -44,7 +44,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'u3',
+            name: 'dias',
             type: 'numeric',
             isNullable: true,
           },
@@ -54,62 +54,27 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
             isNullable: true,
           },
           {
-            name: 'emissao',
+            name: 'data_vencimento',
             type: 'Date',
             isNullable: true,
           },
           {
-            name: 'prevDeposito',
+            name: 'data_quitacao',
             type: 'Date',
             isNullable: true,
           },
           {
-            name: 'deposito',
-            type: 'Date',
-            isNullable: true,
-          },
-          {
-            name: 'envio',
-            type: 'Date',
-            isNullable: true,
-          },
-          {
-            name: 'devolucao',
-            type: 'Date',
-            isNullable: true,
-          },
-          {
-            name: 'pagamento',
-            type: 'Date',
-            isNullable: true,
-          },
-          {
-            name: 'valor',
+            name: 'valor_operacao',
             type: 'numeric',
             isNullable: true,
           },
           {
-            name: 'fornecedor_id',
-            type: 'uuid',
+            name: 'valor_encargos',
+            type: 'numeric',
             isNullable: true,
           },
           {
             name: 'emitente',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'emitenteTipo',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'documento',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
-            name: 'phone',
             type: 'varchar',
             isNullable: true,
           },
@@ -144,18 +109,6 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
       new TableForeignKey({
         name: 'ClienteCheque',
         columnNames: ['client_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'clients',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'cheques',
-      new TableForeignKey({
-        name: 'FornecedorCheque',
-        columnNames: ['fornecedor_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'clients',
         onDelete: 'SET NULL',

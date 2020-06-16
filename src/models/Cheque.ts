@@ -34,47 +34,25 @@ class Cheque {
   numero: string;
 
   @Column()
-  u3: number;
+  dias: number;
 
   @Column()
-  situacao: Date;
+  situacao: string;
 
   @Column('timestamp')
-  emissao: Date;
+  data_vencimento: Date;
 
   @Column('timestamp')
-  prevDeposito: Date;
-
-  @Column('timestamp')
-  deposito: Date;
-
-  @Column('timestamp')
-  envio: Date;
-
-  @Column('timestamp')
-  devolucao: Date;
-
-  @Column('timestamp')
-  pagamento: Date;
+  data_quitacao: Date;
 
   @Column()
-  valor: number;
+  valor_operacao: number;
 
-  @ManyToOne(() => Client, (client) => client.cheque)
-  @JoinColumn({ name: 'client_id' })
-  fornecedor: Client;
+  @Column()
+  valor_encargos: number;
 
   @Column()
   emitente: string;
-
-  @Column()
-  emitenteTipo: string;
-
-  @Column()
-  documento: string;
-
-  @Column()
-  phone: string;
 
   @CreateDateColumn()
   created_at: Date;
