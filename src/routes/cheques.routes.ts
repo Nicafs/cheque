@@ -26,7 +26,6 @@ chequesRouter.get('/', async (request, response) => {
 });
 
 chequesRouter.post('/', async (request, response) => {
-  console.log("Entrou no post - request.body:", request.body);
   const {
     banco_id,
     client_id,
@@ -44,7 +43,6 @@ chequesRouter.post('/', async (request, response) => {
 
   const createChequeService = new CreateChequeService();
 
-  console.log("Vamos criar");
   const cheque = await createChequeService.execute({
     client_id,
     banco_id,

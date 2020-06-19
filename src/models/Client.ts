@@ -11,6 +11,7 @@ import {
 
 import Cheque from './Cheque';
 import User from './User';
+import Operacao from './Operacao';
 
 @Entity('clients')
 class Client {
@@ -47,6 +48,9 @@ class Client {
 
   @OneToMany(() => Cheque, (cheque: Cheque) => cheque.client)
   public cheque: Cheque[];
+
+  @OneToMany(() => Operacao, (operacao: Operacao) => operacao.client)
+  public operacao: Operacao[];
 
   @CreateDateColumn()
   created_at: Date;
