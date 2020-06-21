@@ -11,12 +11,13 @@ import {
   
   import Banco from './Banco';
   import Client from './Client';
+  import User from './User';
   import ChequeOperacao from './ChequeOperacao';
   
   @Entity('operacao')
   class Operacao {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
   
     @ManyToOne(() => Banco, (banco) => banco.cheque)
     @JoinColumn({ name: 'banco_id' })
@@ -28,36 +29,43 @@ import {
 
     @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.operacao)
     public chequeOperacao: ChequeOperacao[];
-    
-    @Column()
-    agencia: number;
-  
-    @Column()
-    conta: number;
-  
-    @Column()
-    numero: string;
-  
-    @Column()
-    dias: number;
-  
+
     @Column()
     situacao: string;
+    
+    @Column()
+    percentual: number;
+  
+    @Column()
+    tarifa: number;
   
     @Column('timestamp')
-    data_vencimento: Date;
-  
-    @Column('timestamp')
-    data_quitacao: Date;
+    data_operacao: Date;
+
+    @Column()
+    acrescimos: number;
   
     @Column()
-    valor_operacao: number;
+    tarifa_bordero: number;
   
     @Column()
-    valor_encargos: number
+    total_operacao: number;
   
     @Column()
-    emitente: string;
+    total_encargos: number;
+  
+    @Column()
+    total_liquido: number;
+
+    @Column()
+    total_outros: number;
+
+    @Column()
+    obs: string;
+  
+    @ManyToOne(() => User, (user) => user.operacao)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
   
     @CreateDateColumn()
     created_at: Date;

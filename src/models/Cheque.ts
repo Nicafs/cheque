@@ -10,10 +10,11 @@ import {
 
 import Banco from './Banco';
 import Client from './Client';
+import User from './User';
 
 @Entity('cheques')
 class Cheque {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @ManyToOne(() => Banco, (banco) => banco.cheque)
@@ -23,6 +24,10 @@ class Cheque {
   @ManyToOne(() => Client, (client) => client.cheque)
   @JoinColumn({ name: 'client_id' })
   client: Client;
+  
+  @ManyToOne(() => User, (user) => user.cheque)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   agencia: number;

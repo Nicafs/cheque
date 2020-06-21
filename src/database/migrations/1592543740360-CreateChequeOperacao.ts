@@ -13,14 +13,17 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'int',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
           },
           {
             name: 'banco_id',
-            type: 'uuid',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'operacao_id',
+            type: 'int',
             isNullable: false,
           },
           {
@@ -31,12 +34,12 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           {
             name: 'agencia',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'conta',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'numero',
@@ -49,14 +52,14 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
             isNullable: true,
           },
           {
-            name: 'situacao',
+            name: 'status',
             type: 'numeric',
             isNullable: true,
           },
           {
             name: 'data_vencimento',
             type: 'Date',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'data_quitacao',
@@ -66,7 +69,7 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           {
             name: 'valor_operacao',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'valor_encargos',
@@ -107,7 +110,19 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
     await queryRunner.createForeignKey(
       'chequeOperacao',
       new TableForeignKey({
-        name: 'BancoOperacao',
+        name: 'ChequeOperacaoClient',
+        columnNames: ['client_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'client',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'chequeOperacao',
+      new TableForeignKey({
+        name: 'ChequeOperacaoBanco',
         columnNames: ['banco_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'bancos',
@@ -118,9 +133,10 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('cheques', 'ChequeOperacaoOperacao');
-    await queryRunner.dropForeignKey('cheques', 'BancoOperacao');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoOperacao');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoClient');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoBanco');
 
-    await queryRunner.dropTable('operacao');
+    await queryRunner.dropTable('chequeOperacao');
   }
 }

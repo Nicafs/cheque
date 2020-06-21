@@ -13,19 +13,17 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'int',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
           },
           {
             name: 'banco_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {
             name: 'client_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {
@@ -46,17 +44,17 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           {
             name: 'dias',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
-            name: 'situacao',
+            name: 'status',
             type: 'numeric',
             isNullable: true,
           },
           {
             name: 'data_vencimento',
             type: 'Date',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'data_quitacao',
@@ -66,7 +64,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           {
             name: 'valor_operacao',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'valor_encargos',

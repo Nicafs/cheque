@@ -8,11 +8,12 @@ import {
 } from 'typeorm';
 
 import Cheque from './Cheque';
+import BancoClient from './BancoClient';
 
 @Entity('bancos')
 class Banco {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   codigo: string;
@@ -28,6 +29,9 @@ class Banco {
 
   @OneToMany(() => Cheque, (cheque) => cheque.banco)
   cheque: Cheque[];
+
+  @OneToMany(() => BancoClient, (bancoClient) => bancoClient.banco)
+  bancoClient: BancoClient[];
 
   @CreateDateColumn()
   created_at: Date;

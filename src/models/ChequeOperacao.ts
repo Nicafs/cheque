@@ -10,10 +10,11 @@ import {
   
   import Banco from './Banco';
   import Operacao from './Operacao';
+  import User from './User';
   
-  @Entity('cheques')
-  class Cheque {
-    @PrimaryGeneratedColumn('uuid')
+  @Entity('chequeOperacao')
+  class ChequeOperacao {
+    @PrimaryGeneratedColumn()
     id: string;
   
     @ManyToOne(() => Banco, (banco) => banco.cheque)
@@ -23,6 +24,10 @@ import {
     @ManyToOne(() => Operacao, (operacao) => operacao.chequeOperacao)
     @JoinColumn({ name: 'operacao_id' })
     operacao: Operacao;
+  
+    @ManyToOne(() => User, (user) => user.chequeOperacao)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
     
     @Column()
     tipo: string;
@@ -64,5 +69,5 @@ import {
     updated_at: Date;
   }
   
-  export default Cheque;
+  export default ChequeOperacao;
   

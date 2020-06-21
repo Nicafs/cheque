@@ -9,13 +9,18 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import Cheque from './Cheque';
 import User from './User';
+import Cheque from './Cheque';
 import Operacao from './Operacao';
+import BancoClient from './BancoClient';
+import TelefoneClient from './TelefoneClient';
+import EnderecoClient from './EnderecoClient';
+import EmailClient from './EmailClient';
+import ReferenciaClient from './ReferenciaClient';
 
 @Entity('clients')
 class Client {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
@@ -24,8 +29,8 @@ class Client {
   @Column()
   email: string;
 
-  @Column('timestamp')
-  birthDate: Date;
+  @Column()
+  nickname: string;
 
   @Column()
   gender: string;
@@ -34,10 +39,40 @@ class Client {
   cpf: string;
 
   @Column()
-  phone: string;
+  rg: string;
+
+  @Column('timestamp')
+  birthDate: Date;
 
   @Column()
-  address: string;
+  nome_pai: string;
+
+  @Column()
+  nome_mae: string;
+
+  @Column()
+  estado_civil: string;
+
+  @Column()
+  conjugue: string;
+
+  @Column()
+  credit: number;
+
+  @Column()
+  limit: number;
+
+  @Column()
+  acrescimo: number;
+
+  @Column()
+  local_trabalho: string;
+
+  @Column()
+  renda_mensal: number;
+
+  @Column()
+  cargo: string;
 
   @Column()
   user_id: string;
@@ -51,6 +86,21 @@ class Client {
 
   @OneToMany(() => Operacao, (operacao: Operacao) => operacao.client)
   public operacao: Operacao[];
+
+  @OneToMany(() => BancoClient, (bancoClient: BancoClient) => bancoClient.client)
+  public bancoClient: BancoClient[];
+
+  @OneToMany(() => EnderecoClient, (enderecoClient: EnderecoClient) => enderecoClient.client)
+  public enderecoClient: EnderecoClient[];
+
+  @OneToMany(() => TelefoneClient, (telefoneClient: TelefoneClient) => telefoneClient.client)
+  public telefoneClient: TelefoneClient[];
+
+  @OneToMany(() => EmailClient, (emailClient: EmailClient) => emailClient.client)
+  public emailClient: EmailClient[];
+
+  @OneToMany(() => ReferenciaClient, (referenciaClient: ReferenciaClient) => referenciaClient.user)
+  public referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()
   created_at: Date;
