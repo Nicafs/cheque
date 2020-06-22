@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from 'typeorm';
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
 
 export default class CreateBancos1591676114478 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -10,6 +10,11 @@ export default class CreateBancos1591676114478 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+          },
+          {
+            name: 'user_id',
+            type: 'uuid',
+            isNullable: false,
           },
           {
             name: 'codigo',
@@ -44,9 +49,23 @@ export default class CreateBancos1591676114478 implements MigrationInterface {
         ],
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'bancos',
+      new TableForeignKey({
+        name: 'BancoUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.dropForeignKey('bancos', 'BancoUser');
+
     await queryRunner.dropTable('bancos');
   }
 }

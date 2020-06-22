@@ -21,7 +21,7 @@ import {
     @JoinColumn({ name: 'banco_id' })
     banco: Banco;
   
-    @ManyToOne(() => Operacao, (operacao) => operacao.chequeOperacao)
+    @ManyToOne(type => Operacao, operacao => operacao.chequeOperacao)
     @JoinColumn({ name: 'operacao_id' })
     operacao: Operacao;
   
@@ -45,7 +45,7 @@ import {
     dias: number;
   
     @Column()
-    situacao: string;
+    status: string;
   
     @Column('timestamp')
     data_vencimento: Date;

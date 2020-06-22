@@ -26,13 +26,13 @@ import {
     @ManyToOne(() => Client, (client) => client.operacao)
     @JoinColumn({ name: 'client_id' })
     client: Client;
-
-    @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.operacao)
-    public chequeOperacao: ChequeOperacao[];
   
     @ManyToOne(() => User, (user) => user.operacao)
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @OneToMany(type => ChequeOperacao, chequeOperacao => chequeOperacao.operacao)
+    public chequeOperacao: ChequeOperacao[];
 
     @Column()
     situacao: string;

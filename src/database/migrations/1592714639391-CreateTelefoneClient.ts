@@ -20,17 +20,17 @@ export default class CreateTelefoneClient1592714639391 implements MigrationInter
                 },
                 {
                   name: 'user_id',
-                  type: 'int',
+                  type: 'uuid',
                   isNullable: false,
                 },
                 {
                   name: 'tipo',
-                  type: 'string',
+                  type: 'varchar',
                   isNullable: false,
                 },
                 {
                   name: 'numero',
-                  type: 'string',
+                  type: 'varchar',
                   isNullable: false,
                 },
                 {
@@ -53,7 +53,7 @@ export default class CreateTelefoneClient1592714639391 implements MigrationInter
               name: 'TelefoneClient',
               columnNames: ['client_id'],
               referencedColumnNames: ['id'],
-              referencedTableName: 'client',
+              referencedTableName: 'clients',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
             }),

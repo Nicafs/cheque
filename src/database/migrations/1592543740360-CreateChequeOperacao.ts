@@ -28,7 +28,17 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           },
           {
             name: 'client_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'user_id',
             type: 'uuid',
+            isNullable: false,
+          },
+          {
+            name: 'tipo',
+            type: 'varchar',
             isNullable: false,
           },
           {
@@ -113,7 +123,7 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
         name: 'ChequeOperacaoClient',
         columnNames: ['client_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'client',
+        referencedTableName: 'clients',
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       }),
@@ -130,12 +140,25 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
         onUpdate: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'chequeOperacao',
+      new TableForeignKey({
+        name: 'ChequeOperacaoUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoOperacao');
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoClient');
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoBanco');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoUser');
 
     await queryRunner.dropTable('chequeOperacao');
   }

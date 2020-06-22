@@ -20,7 +20,7 @@ export default class CreateEnderecoClient1592714584275 implements MigrationInter
                 },
                 {
                   name: 'user_id',
-                  type: 'int',
+                  type: 'uuid',
                   isNullable: false,
                 },
                 {
@@ -93,7 +93,7 @@ export default class CreateEnderecoClient1592714584275 implements MigrationInter
               name: 'EnderecoClient',
               columnNames: ['client_id'],
               referencedColumnNames: ['id'],
-              referencedTableName: 'client',
+              referencedTableName: 'clients',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
             }),

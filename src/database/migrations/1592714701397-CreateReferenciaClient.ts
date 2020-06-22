@@ -19,6 +19,11 @@ export default class CreateReferenciaClient1592714701397 implements MigrationInt
                   isNullable: false,
                 },
                 {
+                  name: 'user_id',
+                  type: 'uuid',
+                  isNullable: false,
+                },
+                {
                   name: 'nome',
                   type: 'varchar',
                   isNullable: false,
@@ -48,7 +53,7 @@ export default class CreateReferenciaClient1592714701397 implements MigrationInt
               name: 'ReferenciaClient',
               columnNames: ['client_id'],
               referencedColumnNames: ['id'],
-              referencedTableName: 'client',
+              referencedTableName: 'clients',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
             }),
@@ -69,9 +74,9 @@ export default class CreateReferenciaClient1592714701397 implements MigrationInt
 
     public async down(queryRunner: QueryRunner): Promise<void> {
       await queryRunner.dropForeignKey('referenciaClient', 'ReferenciaClient');
-        await queryRunner.dropForeignKey('referenciaClient', 'ReferenciaUser');
+      await queryRunner.dropForeignKey('referenciaClient', 'ReferenciaUser');
 
-        await queryRunner.dropTable('referenciaClient');
+      await queryRunner.dropTable('referenciaClient');
     }
 
 }

@@ -24,6 +24,11 @@ export default class CreateBancoCLient1592714712216 implements MigrationInterfac
                   isNullable: false,
                 },
                 {
+                  name: 'user_id',
+                  type: 'uuid',
+                  isNullable: false,
+                },
+                {
                   name: 'agencia',
                   type: 'numeric',
                   isNullable: false,
@@ -53,7 +58,7 @@ export default class CreateBancoCLient1592714712216 implements MigrationInterfac
               name: 'BancoClient',
               columnNames: ['client_id'],
               referencedColumnNames: ['id'],
-              referencedTableName: 'client',
+              referencedTableName: 'clients',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
             }),

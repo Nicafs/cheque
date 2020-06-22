@@ -27,6 +27,11 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'user_id',
+            type: 'uuid',
+            isNullable: false,
+          },
+          {
             name: 'situacao',
             type: 'varchar',
             isNullable: false,
@@ -78,7 +83,7 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
           },
           {
             name: 'obs',
-            type: 'string',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -118,11 +123,24 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
         onUpdate: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'operacao',
+      new TableForeignKey({
+        name: 'OperacaoUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('operacao', 'ClientsOperacao');
     await queryRunner.dropForeignKey('operacao', 'BancoOperacao');
+    await queryRunner.dropForeignKey('operacao', 'OperacaoUser');
 
     await queryRunner.dropTable('operacao');
   }

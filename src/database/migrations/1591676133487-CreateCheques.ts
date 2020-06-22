@@ -27,6 +27,11 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
             isNullable: false,
           },
           {
+            name: 'user_id',
+            type: 'uuid',
+            isNullable: false,
+          },
+          {
             name: 'agencia',
             type: 'numeric',
             isNullable: true,
@@ -113,11 +118,24 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
         onUpdate: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'cheques',
+      new TableForeignKey({
+        name: 'ChequeUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('cheques', 'ClienteCheque');
     await queryRunner.dropForeignKey('cheques', 'BancoCheque');
+    await queryRunner.dropForeignKey('cheques', 'ChequeUser');
 
     await queryRunner.dropTable('cheques');
   }

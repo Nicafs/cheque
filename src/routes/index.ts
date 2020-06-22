@@ -14,6 +14,6 @@ routes.use('/clients', clientsRouter);
 routes.use('/bancos', bancosRouter);
 routes.use('/cheques', chequesRouter);
 routes.use('/chequeOpercao', chequeOperacaoRouter);
-routes.use('/opercao', operacaoRouter);
+routes.use('/operacoes', operacaoRouter);
 
 export default routes;

@@ -19,7 +19,7 @@ interface Request {
   conta: number;
   numero: string;
   dias: number;
-  situacao: string;
+  status: string;
   data_vencimento: Date;
   data_quitacao: Date;
   valor_operacao: number;
@@ -37,7 +37,7 @@ class CreateChequeOperacaoService {
     conta,
     numero,
     dias,
-    situacao,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
@@ -64,7 +64,7 @@ class CreateChequeOperacaoService {
       conta,
       numero,
       dias,
-      situacao,
+      status,
       data_vencimento,
       data_quitacao,
       valor_operacao,

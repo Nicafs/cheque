@@ -20,7 +20,7 @@ export default class CreateEmailClient1592714667066 implements MigrationInterfac
                 },
                 {
                   name: 'user_id',
-                  type: 'int',
+                  type: 'uuid',
                   isNullable: false,
                 },
                 {
@@ -53,7 +53,7 @@ export default class CreateEmailClient1592714667066 implements MigrationInterfac
               name: 'EmailClient',
               columnNames: ['client_id'],
               referencedColumnNames: ['id'],
-              referencedTableName: 'client',
+              referencedTableName: 'clients',
               onDelete: 'SET NULL',
               onUpdate: 'CASCADE',
             }),

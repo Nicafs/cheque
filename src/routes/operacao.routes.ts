@@ -1,8 +1,12 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
+
+import Operacao from '../models/Operacao';
+
 import OperacaoRepository from '../repositories/OperacaoRepository';
+
 import CreateOperacaoService from '../services/CreateOperacaoService';
 import UpdateOperacaoService from '../services/UpdateOperacaoService';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
@@ -19,7 +23,7 @@ OperacaoRouter.get('/:id', async (request, response) => {
 });
 
 OperacaoRouter.get('/', async (request, response) => {
-  const operacaoRepository = getCustomRepository(OperacaoRepository);
+  const operacaoRepository = getRepository(Operacao);
   const operacao = await operacaoRepository.find({ relations: ["chequeOperacao"] });
 
   return response.json(operacao);

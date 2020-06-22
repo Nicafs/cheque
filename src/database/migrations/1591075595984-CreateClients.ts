@@ -12,11 +12,6 @@ export default class CreateClients1591075595984 implements MigrationInterface {
             isPrimary: true,
           },
           {
-            name: 'user_id',
-            type: 'int',
-            isNullable: false,
-          },
-          {
             name: 'type',
             type: 'varchar',
             isNullable: false,
@@ -88,7 +83,7 @@ export default class CreateClients1591075595984 implements MigrationInterface {
           },
           {
             name: 'local_trabalho',
-            type: 'string',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -98,7 +93,7 @@ export default class CreateClients1591075595984 implements MigrationInterface {
           },
           {
             name: 'cargo',
-            type: 'string',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -114,23 +109,9 @@ export default class CreateClients1591075595984 implements MigrationInterface {
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'clients',
-      new TableForeignKey({
-        name: 'ClientUser',
-        columnNames: ['user_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'users',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('clients', 'ClientUser');
-
     await queryRunner.dropTable('clients');
   }
 }

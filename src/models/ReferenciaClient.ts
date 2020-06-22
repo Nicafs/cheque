@@ -22,7 +22,7 @@ import {
     @Column()
     telefone: string;
 
-    @ManyToOne(() => Client, (client) => client.referenciaClient)
+    @ManyToOne(type => Client, client => client.referenciaClient)
     @JoinColumn({ name: 'client_id' })
     client: Client;
   

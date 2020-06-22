@@ -15,7 +15,7 @@ interface Request {
   conta: number;
   numero: string;
   dias: number;
-  situacao: string;
+  status: string;
   data_vencimento: Date;
   data_quitacao: Date;
   valor_operacao: number;
@@ -32,7 +32,7 @@ class UpdateChequeOperacaoService {
     conta,
     numero,
     dias,
-    situacao,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
@@ -66,7 +66,7 @@ class UpdateChequeOperacaoService {
     chequeOperacaoPrev.conta = conta;
     chequeOperacaoPrev.numero = numero;
     chequeOperacaoPrev.dias = dias;
-    chequeOperacaoPrev.situacao = situacao;
+    chequeOperacaoPrev.status = status;
     chequeOperacaoPrev.data_vencimento = data_vencimento;
     chequeOperacaoPrev.data_quitacao = data_quitacao;
     chequeOperacaoPrev.valor_operacao = valor_operacao;

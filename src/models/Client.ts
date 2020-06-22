@@ -93,7 +93,7 @@ class Client {
   @OneToMany(() => EmailClient, (emailClient: EmailClient) => emailClient.client)
   public emailClient: EmailClient[];
 
-  @OneToMany(() => ReferenciaClient, (referenciaClient: ReferenciaClient) => referenciaClient.user)
+  @OneToMany(() => ReferenciaClient, (referenciaClient: ReferenciaClient) => referenciaClient.client)
   public referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()
