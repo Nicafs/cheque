@@ -13,86 +13,94 @@ const OperacaoRouter = Router();
 
 OperacaoRouter.get('/:id', async (request, response) => {
   const operacaoRepository = getCustomRepository(OperacaoRepository);
-  const operacao = await operacaoRepository.findByIds([request.params.id]);
+  const operacao = await operacaoRepository.findOne(request.params.id, { relations: ["chequeOperacao"] });
 
   return response.json(operacao);
 });
 
 OperacaoRouter.get('/', async (request, response) => {
   const operacaoRepository = getCustomRepository(OperacaoRepository);
-  const operacao = await operacaoRepository.find();
+  const operacao = await operacaoRepository.find({ relations: ["chequeOperacao"] });
 
   return response.json(operacao);
 });
 
 OperacaoRouter.post('/', async (request, response) => {
   const {
-    client_id,
     banco_id,
-    agencia,
-    conta,
-    numero,
+    client_id,
+    chequeOperacao,
+    user,
     situacao,
-    dias,
-    data_vencimento,
-    data_quitacao,
-    valor_operacao,
-    valor_encargos,
-    emitente
+    percentual,
+    tarifa,
+    data_operacao,
+    acrescimos,
+    tarifa_bordero,
+    total_operacao,
+    total_encargos,
+    total_liquido,
+    total_outros,
+    obs,
   } = request.body;
 
   const createOperacaoService = new CreateOperacaoService();
 
   const operacao = await createOperacaoService.execute({
-    client_id,
     banco_id,
-    agencia,
-    conta,
-    numero,
+    client_id,
+    chequeOperacao,
+    user,
     situacao,
-    dias,
-    data_vencimento,
-    data_quitacao,
-    valor_operacao,
-    valor_encargos,
-    emitente
+    percentual,
+    tarifa,
+    data_operacao,
+    acrescimos,
+    tarifa_bordero,
+    total_operacao,
+    total_encargos,
+    total_liquido,
+    total_outros,
+    obs,
   });
 
   return response.json({ operacao });
 });
 
-OperacaoRouter.put('/', async (request, response) => {
+OperacaoRouter.put('/:id', async (request, response) => {
   const { 
-    id,
-    client_id,
+    id = request.params.id,
     banco_id,
-    agencia,
-    conta,
-    numero,
+    client_id,
     situacao,
-    dias,
-    data_vencimento,
-    data_quitacao,
-    valor_operacao,
-    valor_encargos,
-    emitente } = request.body;
+    percentual,
+    tarifa,
+    data_operacao,
+    acrescimos,
+    tarifa_bordero,
+    total_operacao,
+    total_encargos,
+    total_liquido,
+    total_outros,
+    obs, } = request.body;
 
   const updateOperacaoService = new UpdateOperacaoService();
 
   const operacao = await updateOperacaoService.execute({
     id,
-    client_id,
     banco_id,
-    agencia,
-    conta,
-    numero,
+    client_id,
     situacao,
-    dias,
-    data_vencimento,
-    data_quitacao,
-    valor_operacao,
-    valor_encargos,
-    emitente
+    percentual,
+    tarifa,
+    data_operacao,
+    acrescimos,
+    tarifa_bordero,
+    total_operacao,
+    total_encargos,
+    total_liquido,
+    total_outros,
+    obs,
   });
 
   return response.json({ operacao });
@@ -103,7 +111,7 @@ OperacaoRouter.delete('/:id', async (request, response) => {
   const operacao = await operacaoRepository.findOne(request.params.id);
 
   if(!operacao) {
-    throw new AppError('Não foi encontrato o Banco para Deletar!!');
+    throw new AppError('Não foi encontrato a Operação para Deletar!!');
   }
 
   const resposta = await operacaoRepository.remove(operacao);

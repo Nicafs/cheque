@@ -29,6 +29,10 @@ import {
 
     @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.operacao)
     public chequeOperacao: ChequeOperacao[];
+  
+    @ManyToOne(() => User, (user) => user.operacao)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
 
     @Column()
     situacao: string;
@@ -62,10 +66,6 @@ import {
 
     @Column()
     obs: string;
-  
-    @ManyToOne(() => User, (user) => user.operacao)
-    @JoinColumn({ name: 'user_id' })
-    user: User;
   
     @CreateDateColumn()
     created_at: Date;

@@ -1,19 +1,31 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, Not } from 'typeorm';
 
 import Client from '../models/Client';
 
 @EntityRepository(Client)
 class ClientsRepository extends Repository<Client> {
-  public async findByEmail(email: string): Promise<Client | null> {
-    const fingClientEmail = await this.findOne({ where: { email } });
+  public async findByRg(rg: string): Promise<Client | null> {
+    const findClientRg = await this.findOne({ where: { rg } });
 
-    return fingClientEmail || null;
+    return findClientRg || null;
   }
 
   public async findByCpf(cpf: string): Promise<Client | null> {
-    const fingClientCpf = await this.findOne({ where: { cpf } });
+    const findClientCpf = await this.findOne({ where: { cpf } });
 
-    return fingClientCpf || null;
+    return findClientCpf || null;
+  }
+
+  public async findByRgPrev(rg: string, rgPrev: string): Promise<Client | null> {
+    const findClientRg = await this.findOne({ where: { rg: [Not(rgPrev), rg] } });
+
+    return findClientRg || null;
+  }
+
+  public async findByCpfPrev(cpf: string, cpfPrev: string): Promise<Client | null> {
+    const findClientCpf = await this.findOne({ where: { cpf: [Not(cpfPrev), cpf] } });
+
+    return findClientCpf || null;
   }
 }
 

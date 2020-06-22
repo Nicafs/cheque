@@ -4,7 +4,8 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    OneToMany,
+    ManyToOne,
+    JoinColumn,
   } from 'typeorm';
   
   import Client from './Client';
@@ -20,12 +21,14 @@ import {
   
     @Column()
     principal: boolean;
+
+    @ManyToOne(() => Client, (client) => client.enderecoClient)
+    @JoinColumn({ name: 'client_id' })
+    client: Client;
   
-    @OneToMany(() => Client, (client) => client.emailClient)
-    client: Client[];
-  
-    @OneToMany(() => User, (user) => user.emailClient)
-    user: User[];
+    @ManyToOne(() => User, (user) => user.enderecoClient)
+    @JoinColumn({ name: 'user_id' })
+    user: User;
   
     @CreateDateColumn()
     created_at: Date;

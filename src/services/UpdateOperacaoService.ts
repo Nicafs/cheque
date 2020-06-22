@@ -9,50 +9,44 @@ import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   id: string;
-  client_id: string;
-  banco_id: string;
-  agencia: number;
-  conta: number;
-  numero: string;
-  dias: number;
+  banco_id: number;
+  client_id: number;
   situacao: string;
-  data_vencimento: Date;
-  data_quitacao: Date;
-  valor_operacao: number;
-  valor_encargos: number;
-  emitente: string;
+  percentual: number;
+  tarifa: number;
+  data_operacao: Date;
+  acrescimos: number;
+  tarifa_bordero: number;
+  total_operacao: number;
+  total_encargos: number;
+  total_liquido: number;
+  total_outros: number;
+  obs: string;
 }
 
 class UpdateOperacaoService {
   public async execute({
     id,
-    client_id,
     banco_id,
-    agencia,
-    conta,
-    numero,
+    client_id,
     situacao,
-    dias,
-    data_vencimento,
-    data_quitacao,
-    valor_operacao,
-    valor_encargos,
-    emitente,
+    percentual,
+    tarifa,
+    data_operacao,
+    acrescimos,
+    tarifa_bordero,
+    total_operacao,
+    total_encargos,
+    total_liquido,
+    total_outros,
+    obs,
   }: Request): Promise<Operacao> {
     const operacaoRepository = getCustomRepository(OperacaoRepository);
 
     const operacaoPrev = await operacaoRepository.findOne(id);
 
     if(!operacaoPrev) {
-        throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
-    }
-
-    if(operacaoPrev.numero !== numero) {
-        const findOperacaoNumero = await operacaoRepository.findOne(numero);
-
-        if (findOperacaoNumero) {
-        throw new AppError('Já existe o Número do  Cadastrado');
-        }
+        throw new AppError('Não foi encontrato a Operação para Atualizar!!');
     }
 
     const bancosRepository = getCustomRepository(BancosRepository);
@@ -66,16 +60,18 @@ class UpdateOperacaoService {
     if(client) {
         operacaoPrev.client = client;
     }
-    operacaoPrev.agencia = agencia;
-    operacaoPrev.conta = conta;
-    operacaoPrev.numero = numero;
+    
     operacaoPrev.situacao = situacao;
-    operacaoPrev.dias = dias;
-    operacaoPrev.data_vencimento = data_vencimento;
-    operacaoPrev.data_quitacao = data_quitacao;
-    operacaoPrev.valor_operacao = valor_operacao;
-    operacaoPrev.valor_encargos = valor_encargos;
-    operacaoPrev.emitente = emitente;
+    operacaoPrev.percentual = percentual;
+    operacaoPrev.tarifa = tarifa;
+    operacaoPrev.data_operacao = data_operacao;
+    operacaoPrev.acrescimos = acrescimos;
+    operacaoPrev.tarifa_bordero = tarifa_bordero;
+    operacaoPrev.total_operacao = total_operacao;
+    operacaoPrev.total_encargos = total_encargos;
+    operacaoPrev.total_liquido = total_liquido;
+    operacaoPrev.total_outros = total_outros;
+    operacaoPrev.obs = obs;
 
     const Operacao =  await operacaoRepository.save(operacaoPrev);
 

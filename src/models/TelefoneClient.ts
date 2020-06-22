@@ -37,5 +37,5 @@ import {
     updated_at: Date;
   }
   
-  export default telefoneClient;
+  export default TelefoneClient;
   

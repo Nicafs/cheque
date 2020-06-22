@@ -13,66 +13,134 @@ const clientsRouter = Router();
 
 clientsRouter.get('/:id', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
-  const client = await clientsRespository.findByIds([request.params.id]);
+  const client = await clientsRespository.findOne(request.params.id, 
+    { relations: ["bancoClient", "telefoneClient", "emailClient", 
+                  "telefoneClient", "referenciaClient"] });
 
   return response.json(client);
 });
 
 clientsRouter.get('/', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
-  const clients = await clientsRespository.find();
+  const clients = await clientsRespository.find(
+    { relations: ["bancoClient", "telefoneClient", "emailClient", 
+                  "telefoneClient", "referenciaClient"] });
 
   return response.json(clients);
 });
 
-clientsRouter.put('/:id', async (request, response) => {
-  const clientsRespository = getCustomRepository(ClientsRepository);
-  const client = await clientsRespository.update(request.params.id, request.body);
+// clientsRouter.put('/:id', async (request, response) => {
+//   const clientsRespository = getCustomRepository(ClientsRepository);
+//   const client = await clientsRespository.update(request.params.id, request.body);
 
-  return response.json(client);
-});
+//   return response.json(client);
+// });
 
 clientsRouter.post('/', async (request, response) => {
   const {
-    name,
-    email,
-    birthDate,
-    gender,
-    cpf,
-    phone,
-    address,
-    user_id,
+  name,
+  nickname,
+  gender,
+  cpf,
+  rg,
+  birthDate,
+  nome_pai,
+  nome_mae,
+  estado_civil,
+  conjugue,
+  credit,
+  limit,
+  acrescimo,
+  local_trabalho,
+  renda_mensal,
+  cargo,
+  user_id,
+  bancoClient,
+  enderecoClient,
+  telefoneClient,
+  emailClient,
+  referenciaClient,
   } = request.body;
   const createClientService = new CreateClientService();
 
   const client = await createClientService.execute({
     name,
-    email,
-    birthDate,
+    nickname,
     gender,
     cpf,
-    phone,
-    address,
+    rg,
+    birthDate,
+    nome_pai,
+    nome_mae,
+    estado_civil,
+    conjugue,
+    credit,
+    limit,
+    acrescimo,
+    local_trabalho,
+    renda_mensal,
+    cargo,
     user_id,
+    bancoClient,
+    enderecoClient,
+    telefoneClient,
+    emailClient,
+    referenciaClient,
   });
 
   return response.json({ client });
 });
 
-clientsRouter.put('/', async (request, response) => {
-  const { id, name, email, birthDate, gender, cpf, phone, address } = request.body;
+clientsRouter.put('/:id', async (request, response) => {
+  const { 
+    id = request.params.id,
+    name,
+    nickname,
+    gender,
+    cpf,
+    rg,
+    birthDate,
+    nome_pai,
+    nome_mae,
+    estado_civil,
+    conjugue,
+    credit,
+    limit,
+    acrescimo,
+    local_trabalho,
+    renda_mensal,
+    cargo,
+    bancoClient,
+    enderecoClient,
+    telefoneClient,
+    emailClient,
+    referenciaClient, } = request.body;
 
   const updateClientService = new UpdateClientService();
 
   const client = await updateClientService.execute({
     id,
     name,
-    email,
-    birthDate,
+    nickname,
     gender,
     cpf,
-    phone,
-    address,
+    rg,
+    birthDate,
+    nome_pai,
+    nome_mae,
+    estado_civil,
+    conjugue,
+    credit,
+    limit,
+    acrescimo,
+    local_trabalho,
+    renda_mensal,
+    cargo,
+    bancoClient,
+    enderecoClient,
+    telefoneClient,
+    emailClient,
+    referenciaClient,
   });
 
   return response.json({ client });

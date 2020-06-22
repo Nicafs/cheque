@@ -9,8 +9,8 @@ import OperacaoRepository from '../repositories/OperacaoRepository';
 
 interface Request {
   id: string;
-  operacao_id: string;
   banco_id: string;
+  tipo: string;
   agencia: number;
   conta: number;
   numero: string;
@@ -26,13 +26,13 @@ interface Request {
 class UpdateChequeOperacaoService {
   public async execute({
     id,
-    operacao_id,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    situacao,
     data_vencimento,
     data_quitacao,
     valor_operacao,
@@ -57,20 +57,16 @@ class UpdateChequeOperacaoService {
 
     const bancosRepository = getCustomRepository(BancosRepository);
     const banco = await bancosRepository.findOne(banco_id);
-    const operacaoRepository = getCustomRepository(OperacaoRepository);
-    const operacao = await operacaoRepository.findOne(operacao_id);
 
     if(banco) {
         chequeOperacaoPrev.banco = banco;
     }
-    if(operacao) {
-        chequeOperacaoPrev.operacao = operacao;
-    }
+    chequeOperacaoPrev.tipo = tipo;
     chequeOperacaoPrev.agencia = agencia;
     chequeOperacaoPrev.conta = conta;
     chequeOperacaoPrev.numero = numero;
-    chequeOperacaoPrev.situacao = situacao;
     chequeOperacaoPrev.dias = dias;
+    chequeOperacaoPrev.situacao = situacao;
     chequeOperacaoPrev.data_vencimento = data_vencimento;
     chequeOperacaoPrev.data_quitacao = data_quitacao;
     chequeOperacaoPrev.valor_operacao = valor_operacao;

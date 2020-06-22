@@ -3,14 +3,18 @@ import { getCustomRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import ChequeOperacao from '../models/ChequeOperacao';
+import Operacao from '../models/Operacao';
+import User from '../models/User';
+
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import BancosRepository from '../repositories/BancosRepository';
-import OperacaoRepository from '../repositories/OperacaoRepository';
 
 
 interface Request {
-  operacao_id: string;
-  banco_id: string;
+  operacao: Operacao | undefined;
+  user: User | undefined;
+  banco_id: number;
+  tipo: string;
   agencia: number;
   conta: number;
   numero: string;
@@ -25,13 +29,15 @@ interface Request {
 
 class CreateChequeOperacaoService {
   public async execute({
-    operacao_id,
+    operacao,
+    user,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    situacao,
     data_vencimento,
     data_quitacao,
     valor_operacao,
@@ -48,17 +54,17 @@ class CreateChequeOperacaoService {
 
     const bancosRepository = getCustomRepository(BancosRepository);
     const banco = await bancosRepository.findOne(banco_id);
-    const operacaoRepository = getCustomRepository(OperacaoRepository);
-    const operacao = await operacaoRepository.findOne(operacao_id);
 
     const chequeOperacao = chequeOperacaoRepository.create({
       operacao,
+      user,
       banco,
+      tipo,
       agencia,
       conta,
       numero,
-      situacao,
       dias,
+      situacao,
       data_vencimento,
       data_quitacao,
       valor_operacao,

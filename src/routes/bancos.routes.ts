@@ -40,8 +40,8 @@ bancosRouter.post('/', async (request, response) => {
   return response.json({ banco });
 });
 
-bancosRouter.put('/', async (request, response) => {
-  const { id, codigo, descricao, juros, prazo } = request.body;
+bancosRouter.put('/:id', async (request, response) => {
+  const { id = request.params.id, codigo, descricao, juros, prazo } = request.body;
 
   const updateBancoService = new UpdateBancoService();
 

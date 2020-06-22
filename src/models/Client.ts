@@ -27,9 +27,6 @@ class Client {
   name: string;
 
   @Column()
-  email: string;
-
-  @Column()
   nickname: string;
 
   @Column()
@@ -73,9 +70,6 @@ class Client {
 
   @Column()
   cargo: string;
-
-  @Column()
-  user_id: string;
 
   @ManyToOne(() => User, (user) => user.clients)
   @JoinColumn({ name: 'user_id' })

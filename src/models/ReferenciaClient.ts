@@ -20,7 +20,7 @@ import {
     nome: string;
   
     @Column()
-    telefone: boolean;
+    telefone: string;
 
     @ManyToOne(() => Client, (client) => client.referenciaClient)
     @JoinColumn({ name: 'client_id' })
