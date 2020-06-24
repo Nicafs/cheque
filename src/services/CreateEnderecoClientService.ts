@@ -17,8 +17,10 @@ interface Request {
     logradouro: string;
     numero: number;
     referencia: string;
-    user: User;
-    client: Client;
+    user_id: string;
+    client_id: number;
+    user: User | undefined;
+    client: Client | undefined;
 }
 
 class CreateEnderecoClientService {
@@ -35,6 +37,8 @@ class CreateEnderecoClientService {
     referencia,
     user,
     client,
+    user_id,
+    client_id,
   }: Request): Promise<EnderecoClient> {
       
     const enderecoClientRepository = getRepository(EnderecoClient);
@@ -44,19 +48,29 @@ class CreateEnderecoClientService {
       throw new AppError('Já existe o endereço cadastrado');
     }
 
+    if(!user) {
+      const userRepository = getRepository(User);
+      user = await userRepository.findOne(user_id) as User;
+    }
+
+    if(!client) {
+      const clientRepository = getRepository(Client);
+      client = await clientRepository.findOne(client_id) as Client;
+    }
+
     const enderecoClient = enderecoClientRepository.create({
-        tipo,
-        bairro,
-        cep,
-        cidade,
-        estado,
-        complemento,
-        tipo_logradouro,
-        logradouro,
-        numero,
-        referencia,
-        user,
-        client,
+      tipo,
+      bairro,
+      cep,
+      cidade,
+      estado,
+      complemento,
+      tipo_logradouro,
+      logradouro,
+      numero,
+      referencia,
+      user,
+      client,
     });
 
     await enderecoClientRepository.save(enderecoClient);
