@@ -12,6 +12,8 @@ export default class CreateReferenciaClient1592714701397 implements MigrationInt
                   name: 'id',
                   type: 'int',
                   isPrimary: true,
+                  isGenerated: true,
+                  generationStrategy: 'increment',
                 },
                 {
                   name: 'client_id',

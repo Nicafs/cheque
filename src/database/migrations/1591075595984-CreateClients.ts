@@ -10,6 +10,8 @@ export default class CreateClients1591075595984 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'type',

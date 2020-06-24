@@ -38,6 +38,7 @@ clientsRouter.get('/', async (request, response) => {
 
 clientsRouter.post('/', async (request, response) => {
   const {
+  type,
   name,
   nickname,
   gender,
@@ -64,6 +65,7 @@ clientsRouter.post('/', async (request, response) => {
   const createClientService = new CreateClientService();
 
   const client = await createClientService.execute({
+    type,
     name,
     nickname,
     gender,
@@ -94,6 +96,7 @@ clientsRouter.post('/', async (request, response) => {
 clientsRouter.put('/:id', async (request, response) => {
   const { 
     id = request.params.id,
+    type,
     name,
     nickname,
     gender,
@@ -120,6 +123,7 @@ clientsRouter.put('/:id', async (request, response) => {
 
   const client = await updateClientService.execute({
     id,
+    type,
     name,
     nickname,
     gender,

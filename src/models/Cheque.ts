@@ -15,7 +15,7 @@ import User from './User';
 @Entity('cheques')
 class Cheque {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @ManyToOne(() => Banco, (banco) => banco.cheque)
   @JoinColumn({ name: 'banco_id' })

@@ -2,28 +2,28 @@ import { Router } from 'express';
 import { getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-// import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
+import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
 import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
-// import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
+import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const enderecoClientRouter = Router();
 
-// enderecoClientRouter.use(ensureAuthenticated);
+// enderecoClientRouter.use(ensureAuthenzticated);
 
-// enderecoClientRouter.get('/:id', async (request, response) => {
-//   const chequesRepository = getCustomRepository(ChequesRepository);
-//   const cheque = await chequesRepository.findByIds([request.params.id]);
+enderecoClientRouter.get('/:id', async (request, response) => {
+  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
+  const enderecoClient = await enderecoClientRepository.findOne(request.params.id);
 
-//   return response.json(cheque);
-// });
+  return response.json(enderecoClient);
+});
 
-// enderecoClientRouter.get('/', async (request, response) => {
-//   const chequesRepository = getCustomRepository(ChequesRepository);
-//   const cheques = await chequesRepository.find();
+enderecoClientRouter.get('/', async (request, response) => {
+  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
+  const enderecoClient = await enderecoClientRepository.find();
 
-//   return response.json(cheques);
-// });
+  return response.json(enderecoClient);
+});
 
 enderecoClientRouter.post('/', async (request, response) => {
   const {
@@ -41,12 +41,12 @@ enderecoClientRouter.post('/', async (request, response) => {
     client_id
   } = request.body;
 
-  const createChequeService = new CreateEnderecoClientService();
+  const createenderecoClientervice = new CreateEnderecoClientService();
 
   const user = undefined;
   const client = undefined;
 
-  const enderecoClient = await createChequeService.execute({
+  const enderecoClient = await createenderecoClientervice.execute({
     tipo,
     bairro,
     cep,
@@ -66,54 +66,54 @@ enderecoClientRouter.post('/', async (request, response) => {
   return response.json({ enderecoClient });
 });
 
-// enderecoClientRouter.put('/', async (request, response) => {
-//   const { 
-//     id,
-//     client_id,
-//     banco_id,
-//     agencia,
-//     conta,
-//     numero,
-//     situacao,
-//     dias,
-//     data_vencimento,
-//     data_quitacao,
-//     valor_operacao,
-//     valor_encargos,
-//     emitente } = request.body;
+enderecoClientRouter.put('/', async (request, response) => {
+  const { 
+    id,
+    tipo,
+    bairro,
+    cep,
+    cidade,
+    estado,
+    complemento,
+    tipo_logradouro,
+    logradouro,
+    numero,
+    referencia,
+    user_id,
+    client_id } = request.body;
 
-//   const updateChequeService = new UpdateChequeService();
+  const updateEnderecoClientService = new UpdateEnderecoClientService();
 
-//   const cheque = await updateChequeService.execute({
-//     id,
-//     client_id,
-//     banco_id,
-//     agencia,
-//     conta,
-//     numero,
-//     situacao,
-//     dias,
-//     data_vencimento,
-//     data_quitacao,
-//     valor_operacao,
-//     valor_encargos,
-//     emitente
-//   });
+  const enderecoClient = await updateEnderecoClientService.execute({
+    id,
+    tipo,
+    bairro,
+    cep,
+    cidade,
+    estado,
+    complemento,
+    tipo_logradouro,
+    logradouro,
+    numero,
+    referencia,
+    user_id,
+    client_id
+  });
 
-//   return response.json({ cheque });
-// });
+  return response.json({ enderecoClient });
+});
 
-// enderecoClientRouter.delete('/:id', async (request, response) => {
-//   const chequesRepository = getCustomRepository(ChequesRepository);
-//   const cheque = await chequesRepository.findOne(request.params.id);
+enderecoClientRouter.delete('/:id', async (request, response) => {
+  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
+  const enderecoClient = await enderecoClientRepository.findOne(request.params.id);
 
-//   if(!cheque) {
-//     throw new AppError('Não foi encontrato o Banco para Deletar!!');
-//   }
+  if(!enderecoClient) {
+    throw new AppError('Não foi encontrato o Banco para Deletar!!');
+  }
 
-//   const resposta = await chequesRepository.remove(cheque);
+  const resposta = await enderecoClientRepository.remove(enderecoClient);
 
-//   return response.json(resposta);
-// });
+  return response.json(resposta);
+});
 
 export default enderecoClientRouter;

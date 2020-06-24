@@ -12,6 +12,8 @@ export default class CreateEnderecoClient1592714584275 implements MigrationInter
                   name: 'id',
                   type: 'int',
                   isPrimary: true,
+                  isGenerated: true,
+                  generationStrategy: 'increment',
                 },
                 {
                   name: 'client_id',

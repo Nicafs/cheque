@@ -19,6 +19,7 @@ import CreateReferenciaClientService from '../services/CreateReferenciaClientSer
 
 interface Request {
   id: number;
+  type: string;
   name: string;
   nickname: string;
   gender: string;
@@ -45,6 +46,7 @@ interface Request {
 class UpdateClientService {
   public async execute({
     id,
+    type,
     name,
     nickname,
     gender,
@@ -91,6 +93,7 @@ class UpdateClientService {
       }
     }
 
+    clientPrev.type = type,
     clientPrev.name = name;
     clientPrev.nickname = nickname;
     clientPrev.gender = gender;

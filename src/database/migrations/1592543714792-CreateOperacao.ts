@@ -15,6 +15,8 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'banco_id',

@@ -15,6 +15,8 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'banco_id',

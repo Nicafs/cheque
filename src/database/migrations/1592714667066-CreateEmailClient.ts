@@ -12,6 +12,8 @@ export default class CreateEmailClient1592714667066 implements MigrationInterfac
                   name: 'id',
                   type: 'int',
                   isPrimary: true,
+                  isGenerated: true,
+                  generationStrategy: 'increment',
                 },
                 {
                   name: 'client_id',

@@ -15,6 +15,8 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
             name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'banco_id',

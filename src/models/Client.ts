@@ -21,8 +21,11 @@ import ReferenciaClient from './ReferenciaClient';
 @Entity('clients')
 class Client {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
+  @Column()
+  type: string;
+  
   @Column()
   name: string;
 

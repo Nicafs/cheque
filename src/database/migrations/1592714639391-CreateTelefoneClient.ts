@@ -12,6 +12,8 @@ export default class CreateTelefoneClient1592714639391 implements MigrationInter
                   name: 'id',
                   type: 'int',
                   isPrimary: true,
+                  isGenerated: true,
+                  generationStrategy: 'increment',
                 },
                 {
                   name: 'client_id',

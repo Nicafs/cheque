@@ -12,6 +12,8 @@ export default class CreateBancoCLient1592714712216 implements MigrationInterfac
                   name: 'id',
                   type: 'int',
                   isPrimary: true,
+                  isGenerated: true,
+                  generationStrategy: 'increment',
                 },
                 {
                   name: 'client_id',

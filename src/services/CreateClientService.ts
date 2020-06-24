@@ -19,6 +19,7 @@ import CreateEmailClientService from '../services/CreateEmailClientService';
 import CreateReferenciaClientService from '../services/CreateReferenciaClientService';
 
 interface Request {
+  type: string;
   name: string;
   nickname: string;
   gender: string;
@@ -45,6 +46,7 @@ interface Request {
 
 class CreateClientService {
   public async execute({
+    type,
     name,
     nickname,
     gender,
@@ -82,10 +84,14 @@ class CreateClientService {
       throw new AppError('Já existe o rg cadastrado');
     }
 
-    const userRepository = getRepository(User);
-    const user = await userRepository.findOne(user_id);
+    let user: User;
+    if(user_id) {
+      const userRepository = getRepository(User);
+      user = await userRepository.findOne(user_id) as User;
+    }
 
     const client = clientsRepository.create({
+      type,
       name,
       nickname,
       gender,
@@ -102,7 +108,6 @@ class CreateClientService {
       local_trabalho,
       renda_mensal,
       cargo,
-      user,
     });
     
     await clientsRepository.save(client);
