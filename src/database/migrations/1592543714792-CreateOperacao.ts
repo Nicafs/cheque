@@ -19,11 +19,6 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'banco_id',
-            type: 'int',
-            isNullable: false,
-          },
-          {
             name: 'client_id',
             type: 'int',
             isNullable: false,
@@ -117,18 +112,6 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'operacao',
       new TableForeignKey({
-        name: 'BancoOperacao',
-        columnNames: ['banco_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'bancos',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'operacao',
-      new TableForeignKey({
         name: 'OperacaoUser',
         columnNames: ['user_id'],
         referencedColumnNames: ['id'],
@@ -141,7 +124,6 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('operacao', 'ClientsOperacao');
-    await queryRunner.dropForeignKey('operacao', 'BancoOperacao');
     await queryRunner.dropForeignKey('operacao', 'OperacaoUser');
 
     await queryRunner.dropTable('operacao');

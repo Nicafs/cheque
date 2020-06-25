@@ -16,9 +16,15 @@ const OperacaoRouter = Router();
 // OperacaoRouter.use(ensureAuthenticated);
 
 OperacaoRouter.get('/:id', async (request, response) => {
-  const operacaoRepository = getCustomRepository(OperacaoRepository);
-  const operacao = await operacaoRepository.findOne(request.params.id, { relations: ["chequeOperacao"] });
-
+  const operacaoRepository = getRepository(Operacao);
+  const operacao = await operacaoRepository.findOne(
+    request.params.id, 
+    );
+  const teste = await operacaoRepository.createQueryBuilder("operacao")
+  .innerJoinAndSelect("operacao.client", "clients")
+  .getMany();
+  console.log("teste:", teste);
+  console.log("operacao:", operacao);
   return response.json(operacao);
 });
 
@@ -31,7 +37,6 @@ OperacaoRouter.get('/', async (request, response) => {
 
 OperacaoRouter.post('/', async (request, response) => {
   const {
-    banco_id,
     client_id,
     chequeOperacao,
     user,
@@ -51,7 +56,6 @@ OperacaoRouter.post('/', async (request, response) => {
   const createOperacaoService = new CreateOperacaoService();
 
   const operacao = await createOperacaoService.execute({
-    banco_id,
     client_id,
     chequeOperacao,
     user,
@@ -74,7 +78,6 @@ OperacaoRouter.post('/', async (request, response) => {
 OperacaoRouter.put('/:id', async (request, response) => {
   const { 
     id = request.params.id,
-    banco_id,
     client_id,
     situacao,
     percentual,
@@ -92,7 +95,6 @@ OperacaoRouter.put('/:id', async (request, response) => {
 
   const operacao = await updateOperacaoService.execute({
     id,
-    banco_id,
     client_id,
     situacao,
     percentual,

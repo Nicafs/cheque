@@ -9,14 +9,12 @@ import User from '../models/User';
 import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
 
 import OperacaoRepository from '../repositories/OperacaoRepository';
-import BancosRepository from '../repositories/BancosRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
 
 
 interface Request {
   chequeOperacao: ChequeOperacao[];
   user: User;
-  banco_id: number;
   client_id: number;
   situacao: string;
   percentual: number;
@@ -33,7 +31,6 @@ interface Request {
 
 class CreateOperacaoService {
   public async execute({
-    banco_id,
     client_id,
     chequeOperacao,
     user,
@@ -51,13 +48,10 @@ class CreateOperacaoService {
   }: Request): Promise<Operacao> {
     const operacaoRepository = getCustomRepository(OperacaoRepository);
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const banco = await bancosRepository.findOne(banco_id);
     const clientRepository = getCustomRepository(ClientsRepository);
     const client = await clientRepository.findOne(client_id);
 
     const operacao = operacaoRepository.create({
-      banco,
       client,
       chequeOperacao,
       user,

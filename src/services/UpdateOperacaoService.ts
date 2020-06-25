@@ -9,7 +9,6 @@ import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   id: string;
-  banco_id: number;
   client_id: number;
   situacao: string;
   percentual: number;
@@ -27,7 +26,6 @@ interface Request {
 class UpdateOperacaoService {
   public async execute({
     id,
-    banco_id,
     client_id,
     situacao,
     percentual,
@@ -49,14 +47,9 @@ class UpdateOperacaoService {
         throw new AppError('Não foi encontrato a Operação para Atualizar!!');
     }
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const banco = await bancosRepository.findOne(banco_id);
     const clientRepository = getCustomRepository(ClientsRepository);
     const client = await clientRepository.findOne(client_id);
 
-    if(banco) {
-        operacaoPrev.banco = banco;
-    }
     if(client) {
         operacaoPrev.client = client;
     }

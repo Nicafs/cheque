@@ -16,6 +16,8 @@ import {
   class ChequeOperacao {
     @PrimaryGeneratedColumn()
     id: string;
+
+    banco_id: number;
   
     @ManyToOne(() => Banco, (banco) => banco.cheque)
     @JoinColumn({ name: 'banco_id' })

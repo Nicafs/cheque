@@ -18,11 +18,7 @@ import {
   class Operacao {
     @PrimaryGeneratedColumn()
     id: number;
-  
-    @ManyToOne(() => Banco, (banco) => banco.cheque)
-    @JoinColumn({ name: 'banco_id' })
-    banco: Banco;
-  
+
     @ManyToOne(() => Client, (client) => client.operacao)
     @JoinColumn({ name: 'client_id' })
     client: Client;

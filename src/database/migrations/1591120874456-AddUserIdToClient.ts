@@ -13,7 +13,7 @@ export default class AddUserIdToClient1591120874456
       new TableColumn({
         name: 'user_id',
         type: 'uuid',
-        isNullable: true,
+        isNullable: false,
       }),
     );
 
