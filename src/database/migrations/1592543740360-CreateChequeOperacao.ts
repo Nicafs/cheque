@@ -5,7 +5,8 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateChequeOperacao1592543740360 implements MigrationInterface {
+export default class CreateChequeOperacao1592543740360
+  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -13,30 +14,45 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'int',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'banco_id',
-            type: 'uuid',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'operacao_id',
+            type: 'int',
             isNullable: false,
           },
           {
             name: 'client_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'user_id',
             type: 'uuid',
+            isNullable: false,
+          },
+          {
+            name: 'tipo',
+            type: 'varchar',
             isNullable: false,
           },
           {
             name: 'agencia',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'conta',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'numero',
@@ -45,18 +61,18 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           },
           {
             name: 'dias',
-            type: 'numeric',
+            type: 'varchar',
             isNullable: true,
           },
           {
-            name: 'situacao',
+            name: 'status',
             type: 'numeric',
             isNullable: true,
           },
           {
             name: 'data_vencimento',
             type: 'Date',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'data_quitacao',
@@ -66,7 +82,7 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           {
             name: 'valor_operacao',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'valor_encargos',
@@ -107,7 +123,19 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
     await queryRunner.createForeignKey(
       'chequeOperacao',
       new TableForeignKey({
-        name: 'BancoOperacao',
+        name: 'ChequeOperacaoClient',
+        columnNames: ['client_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'clients',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
+
+    await queryRunner.createForeignKey(
+      'chequeOperacao',
+      new TableForeignKey({
+        name: 'ChequeOperacaoBanco',
         columnNames: ['banco_id'],
         referencedColumnNames: ['id'],
         referencedTableName: 'bancos',
@@ -115,12 +143,29 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
         onUpdate: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'chequeOperacao',
+      new TableForeignKey({
+        name: 'ChequeOperacaoUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('cheques', 'ChequeOperacaoOperacao');
-    await queryRunner.dropForeignKey('cheques', 'BancoOperacao');
+    await queryRunner.dropForeignKey(
+      'chequeOperacao',
+      'ChequeOperacaoOperacao',
+    );
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoClient');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoBanco');
+    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoUser');
 
-    await queryRunner.dropTable('operacao');
+    await queryRunner.dropTable('chequeOperacao');
   }
 }

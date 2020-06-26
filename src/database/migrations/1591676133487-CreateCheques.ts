@@ -13,18 +13,23 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'int',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'banco_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {
             name: 'client_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'user_id',
             type: 'uuid',
             isNullable: false,
           },
@@ -46,17 +51,17 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           {
             name: 'dias',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
-            name: 'situacao',
+            name: 'status',
             type: 'numeric',
             isNullable: true,
           },
           {
             name: 'data_vencimento',
             type: 'Date',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'data_quitacao',
@@ -66,7 +71,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           {
             name: 'valor_operacao',
             type: 'numeric',
-            isNullable: true,
+            isNullable: false,
           },
           {
             name: 'valor_encargos',
@@ -115,11 +120,24 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
         onUpdate: 'CASCADE',
       }),
     );
+
+    await queryRunner.createForeignKey(
+      'cheques',
+      new TableForeignKey({
+        name: 'ChequeUser',
+        columnNames: ['user_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'users',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.dropForeignKey('cheques', 'ClienteCheque');
     await queryRunner.dropForeignKey('cheques', 'BancoCheque');
+    await queryRunner.dropForeignKey('cheques', 'ChequeUser');
 
     await queryRunner.dropTable('cheques');
   }

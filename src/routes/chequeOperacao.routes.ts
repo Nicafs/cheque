@@ -3,8 +3,12 @@ import { getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
+import OperacaoRepository from '../repositories/OperacaoRepository';
+import UsersRepository from '../repositories/UsersRepository';
+
 import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
 import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
+import User from '../models/User';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const chequeOperacaoRouter = Router();
@@ -12,14 +16,20 @@ const chequeOperacaoRouter = Router();
 // chequeOperacaoRouter.use(ensureAuthenticated);
 
 chequeOperacaoRouter.get('/:id', async (request, response) => {
-  const chequeOperacaoRepository = getCustomRepository(ChequeOperacaoRepository);
-  const chequeOperacao = await chequeOperacaoRepository.findByIds([request.params.id]);
+  const chequeOperacaoRepository = getCustomRepository(
+    ChequeOperacaoRepository,
+  );
+  const chequeOperacao = await chequeOperacaoRepository.findByIds([
+    request.params.id,
+  ]);
 
   return response.json(chequeOperacao);
 });
 
 chequeOperacaoRouter.get('/', async (request, response) => {
-  const chequeOperacaoRepository = getCustomRepository(ChequeOperacaoRepository);
+  const chequeOperacaoRepository = getCustomRepository(
+    ChequeOperacaoRepository,
+  );
   const chequeOperacao = await chequeOperacaoRepository.find();
 
   return response.json(chequeOperacao);
@@ -28,81 +38,96 @@ chequeOperacaoRouter.get('/', async (request, response) => {
 chequeOperacaoRouter.post('/', async (request, response) => {
   const {
     operacao_id,
+    user_id,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
   } = request.body;
+
+  const operacaoRepository = getCustomRepository(OperacaoRepository);
+  const operacao = await operacaoRepository.findOne(operacao_id);
+
+  const usersRepository = getCustomRepository(UsersRepository);
+  const user = await usersRepository.findOne(user_id);
 
   const createChequeOperacaoService = new CreateChequeOperacaoService();
 
   const chequeOperacao = await createChequeOperacaoService.execute({
-    operacao_id,
+    operacao,
+    user,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
   });
 
   return response.json({ chequeOperacao });
 });
 
-chequeOperacaoRouter.put('/', async (request, response) => {
-  const { 
-    id,
-    operacao_id,
+chequeOperacaoRouter.put('/:id', async (request, response) => {
+  const {
+    id = request.params.id,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente } = request.body;
+    emitente,
+  } = request.body;
 
   const updateChequeOperacaoService = new UpdateChequeOperacaoService();
 
   const chequeOperacao = await updateChequeOperacaoService.execute({
     id,
-    operacao_id,
     banco_id,
+    tipo,
     agencia,
     conta,
     numero,
-    situacao,
     dias,
+    status,
     data_vencimento,
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
   });
 
   return response.json({ chequeOperacao });
 });
 
 chequeOperacaoRouter.delete('/:id', async (request, response) => {
-  const chequeOperacaoRepository = getCustomRepository(ChequeOperacaoRepository);
-  const chequeOperacao = await chequeOperacaoRepository.findOne(request.params.id);
+  const chequeOperacaoRepository = getCustomRepository(
+    ChequeOperacaoRepository,
+  );
+  const chequeOperacao = await chequeOperacaoRepository.findOne(
+    request.params.id,
+  );
 
-  if(!chequeOperacao) {
+  if (!chequeOperacao) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 

@@ -9,23 +9,29 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import Cheque from './Cheque';
 import User from './User';
+import Cheque from './Cheque';
 import Operacao from './Operacao';
+import ChequeOperacao from './ChequeOperacao';
+import BancoClient from './BancoClient';
+import TelefoneClient from './TelefoneClient';
+import EnderecoClient from './EnderecoClient';
+import EmailClient from './EmailClient';
+import ReferenciaClient from './ReferenciaClient';
 
 @Entity('clients')
 class Client {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  type: string;
 
   @Column()
   name: string;
 
   @Column()
-  email: string;
-
-  @Column('timestamp')
-  birthDate: Date;
+  nickname: string;
 
   @Column()
   gender: string;
@@ -34,13 +40,40 @@ class Client {
   cpf: string;
 
   @Column()
-  phone: string;
+  rg: string;
+
+  @Column('timestamp')
+  birthDate: Date;
 
   @Column()
-  address: string;
+  nome_pai: string;
 
   @Column()
-  user_id: string;
+  nome_mae: string;
+
+  @Column()
+  estado_civil: string;
+
+  @Column()
+  conjugue: string;
+
+  @Column()
+  credit: number;
+
+  @Column()
+  limit: number;
+
+  @Column()
+  acrescimo: number;
+
+  @Column()
+  local_trabalho: string;
+
+  @Column()
+  renda_mensal: number;
+
+  @Column()
+  cargo: string;
 
   @ManyToOne(() => User, (user) => user.clients)
   @JoinColumn({ name: 'user_id' })
@@ -51,6 +84,42 @@ class Client {
 
   @OneToMany(() => Operacao, (operacao: Operacao) => operacao.client)
   public operacao: Operacao[];
+
+  @OneToMany(
+    () => ChequeOperacao,
+    (chequeOperacao: ChequeOperacao) => chequeOperacao.client,
+  )
+  public chequeOperacao: ChequeOperacao[];
+
+  @OneToMany(
+    () => BancoClient,
+    (bancoClient: BancoClient) => bancoClient.client,
+  )
+  public bancoClient: BancoClient[];
+
+  @OneToMany(
+    () => EnderecoClient,
+    (enderecoClient: EnderecoClient) => enderecoClient.client,
+  )
+  public enderecoClient: EnderecoClient[];
+
+  @OneToMany(
+    () => TelefoneClient,
+    (telefoneClient: TelefoneClient) => telefoneClient.client,
+  )
+  public telefoneClient: TelefoneClient[];
+
+  @OneToMany(
+    () => EmailClient,
+    (emailClient: EmailClient) => emailClient.client,
+  )
+  public emailClient: EmailClient[];
+
+  @OneToMany(
+    () => ReferenciaClient,
+    (referenciaClient: ReferenciaClient) => referenciaClient.client,
+  )
+  public referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -1,70 +1,72 @@
 import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    UpdateDateColumn,
-    ManyToOne,
-    OneToMany,
-    JoinColumn,
-  } from 'typeorm';
-  
-  import Banco from './Banco';
-  import Client from './Client';
-  import ChequeOperacao from './ChequeOperacao';
-  
-  @Entity('operacao')
-  class Operacao {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-  
-    @ManyToOne(() => Banco, (banco) => banco.cheque)
-    @JoinColumn({ name: 'banco_id' })
-    banco: Banco;
-  
-    @ManyToOne(() => Client, (client) => client.operacao)
-    @JoinColumn({ name: 'client_id' })
-    client: Client;
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
-    @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.operacao)
-    public chequeOperacao: ChequeOperacao[];
-    
-    @Column()
-    agencia: number;
-  
-    @Column()
-    conta: number;
-  
-    @Column()
-    numero: string;
-  
-    @Column()
-    dias: number;
-  
-    @Column()
-    situacao: string;
-  
-    @Column('timestamp')
-    data_vencimento: Date;
-  
-    @Column('timestamp')
-    data_quitacao: Date;
-  
-    @Column()
-    valor_operacao: number;
-  
-    @Column()
-    valor_encargos: number
-  
-    @Column()
-    emitente: string;
-  
-    @CreateDateColumn()
-    created_at: Date;
-  
-    @UpdateDateColumn()
-    updated_at: Date;
-  }
-  
-  export default Operacao;
-  
+import Client from './Client';
+import User from './User';
+import ChequeOperacao from './ChequeOperacao';
+
+@Entity('operacao')
+class Operacao {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => Client, (client) => client.operacao)
+  @JoinColumn({ name: 'client_id' })
+  client: Client;
+
+  @ManyToOne(() => User, (user) => user.operacao)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @OneToMany(() => ChequeOperacao, (chequeOperacao) => chequeOperacao.operacao)
+  public chequeOperacao: ChequeOperacao[];
+
+  @Column()
+  situacao: string;
+
+  @Column()
+  percentual: number;
+
+  @Column()
+  tarifa: number;
+
+  @Column('timestamp')
+  data_operacao: Date;
+
+  @Column()
+  acrescimos: number;
+
+  @Column()
+  tarifa_bordero: number;
+
+  @Column()
+  total_operacao: number;
+
+  @Column()
+  total_encargos: number;
+
+  @Column()
+  total_liquido: number;
+
+  @Column()
+  total_outros: number;
+
+  @Column()
+  obs: string;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
+}
+
+export default Operacao;

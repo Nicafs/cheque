@@ -13,68 +13,73 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
         columns: [
           {
             name: 'id',
-            type: 'uuid',
+            type: 'int',
             isPrimary: true,
-            generationStrategy: 'uuid',
-            default: 'uuid_generate_v4()',
-          },
-          {
-            name: 'banco_id',
-            type: 'uuid',
-            isNullable: false,
+            isGenerated: true,
+            generationStrategy: 'increment',
           },
           {
             name: 'client_id',
+            type: 'int',
+            isNullable: false,
+          },
+          {
+            name: 'user_id',
             type: 'uuid',
             isNullable: false,
           },
           {
-            name: 'agencia',
-            type: 'numeric',
-            isNullable: true,
-          },
-          {
-            name: 'conta',
-            type: 'numeric',
-            isNullable: true,
-          },
-          {
-            name: 'numero',
+            name: 'situacao',
             type: 'varchar',
             isNullable: false,
           },
           {
-            name: 'dias',
+            name: 'percentual',
+            type: 'numeric',
+            isNullable: false,
+          },
+          {
+            name: 'tarifa',
             type: 'numeric',
             isNullable: true,
           },
           {
-            name: 'situacao',
-            type: 'numeric',
-            isNullable: true,
-          },
-          {
-            name: 'data_vencimento',
+            name: 'data_operacao',
             type: 'Date',
-            isNullable: true,
+            isNullable: false,
           },
           {
-            name: 'data_quitacao',
-            type: 'Date',
-            isNullable: true,
-          },
-          {
-            name: 'valor_operacao',
+            name: 'acrescimos',
             type: 'numeric',
             isNullable: true,
           },
           {
-            name: 'valor_encargos',
+            name: 'tarifa_bordero',
             type: 'numeric',
             isNullable: true,
           },
           {
-            name: 'emitente',
+            name: 'total_operacao',
+            type: 'numeric',
+            isNullable: true,
+          },
+          {
+            name: 'total_encargos',
+            type: 'numeric',
+            isNullable: true,
+          },
+          {
+            name: 'total_liquido',
+            type: 'numeric',
+            isNullable: true,
+          },
+          {
+            name: 'total_outros',
+            type: 'numeric',
+            isNullable: true,
+          },
+          {
+            name: 'obs',
             type: 'varchar',
             isNullable: true,
           },
@@ -107,10 +112,10 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
     await queryRunner.createForeignKey(
       'operacao',
       new TableForeignKey({
-        name: 'BancoOperacao',
-        columnNames: ['banco_id'],
+        name: 'OperacaoUser',
+        columnNames: ['user_id'],
         referencedColumnNames: ['id'],
-        referencedTableName: 'bancos',
+        referencedTableName: 'users',
         onDelete: 'SET NULL',
         onUpdate: 'CASCADE',
       }),
@@ -118,8 +123,8 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('cheques', 'ClientsOperacao');
-    await queryRunner.dropForeignKey('cheques', 'BancoOperacao');
+    await queryRunner.dropForeignKey('operacao', 'ClientsOperacao');
+    await queryRunner.dropForeignKey('operacao', 'OperacaoUser');
 
     await queryRunner.dropTable('operacao');
   }
