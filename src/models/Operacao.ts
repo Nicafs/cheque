@@ -19,6 +19,8 @@ import {
     @PrimaryGeneratedColumn()
     id: number;
 
+    client_id: number;
+
     @ManyToOne(() => Client, (client) => client.operacao)
     @JoinColumn({ name: 'client_id' })
     client: Client;

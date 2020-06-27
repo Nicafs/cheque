@@ -55,7 +55,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           },
           {
             name: 'status',
-            type: 'numeric',
+            type: 'varchar',
             isNullable: true,
           },
           {

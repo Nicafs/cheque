@@ -5,6 +5,7 @@ import AppError from '../errors/AppError';
 import ChequeOperacao from '../models/ChequeOperacao';
 import Operacao from '../models/Operacao';
 import User from '../models/User';
+import Client from '../models/Client';
 
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import BancosRepository from '../repositories/BancosRepository';
@@ -12,6 +13,7 @@ import BancosRepository from '../repositories/BancosRepository';
 
 interface Request {
   operacao: Operacao | undefined;
+  client: Client | undefined;
   user: User | undefined;
   banco_id: number;
   tipo: string;
@@ -31,6 +33,7 @@ class CreateChequeOperacaoService {
   public async execute({
     operacao,
     user,
+    client,
     banco_id,
     tipo,
     agencia,
@@ -58,6 +61,7 @@ class CreateChequeOperacaoService {
     const chequeOperacao = chequeOperacaoRepository.create({
       operacao,
       user,
+      client,
       banco,
       tipo,
       agencia,

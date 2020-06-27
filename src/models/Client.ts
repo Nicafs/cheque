@@ -12,6 +12,7 @@ import {
 import User from './User';
 import Cheque from './Cheque';
 import Operacao from './Operacao';
+import ChequeOperacao from './ChequeOperacao';
 import BancoClient from './BancoClient';
 import TelefoneClient from './TelefoneClient';
 import EnderecoClient from './EnderecoClient';
@@ -83,6 +84,9 @@ class Client {
 
   @OneToMany(() => Operacao, (operacao: Operacao) => operacao.client)
   public operacao: Operacao[];
+
+  @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.client)
+  public chequeOperacao: ChequeOperacao[];
 
   @OneToMany(() => BancoClient, (bancoClient: BancoClient) => bancoClient.client)
   public bancoClient: BancoClient[];

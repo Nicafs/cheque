@@ -76,6 +76,9 @@ class CreateOperacaoService {
       if(user) {
         co.user = user;
       }
+      if(client) {
+        co.client = client;
+      }
       await chequeOperacaoService.execute(co);
     })
 

@@ -11,21 +11,28 @@ import {
   import Banco from './Banco';
   import Operacao from './Operacao';
   import User from './User';
+  import Client from './Client';
   
   @Entity('chequeOperacao')
   class ChequeOperacao {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     banco_id: number;
+
+    operacao_id: number;
   
     @ManyToOne(() => Banco, (banco) => banco.cheque)
     @JoinColumn({ name: 'banco_id' })
     banco: Banco;
   
-    @ManyToOne(type => Operacao, operacao => operacao.chequeOperacao)
+    @ManyToOne(type => Operacao, operacao => operacao.chequeOperacao, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'operacao_id' })
     operacao: Operacao;
+
+    @ManyToOne(() => Client, (client) => client.chequeOperacao)
+    @JoinColumn({ name: 'client_id' })
+    client: Client;
   
     @ManyToOne(() => User, (user) => user.chequeOperacao)
     @JoinColumn({ name: 'user_id' })

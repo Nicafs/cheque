@@ -9,6 +9,9 @@ import OperacaoRepository from '../repositories/OperacaoRepository';
 
 import CreateOperacaoService from '../services/CreateOperacaoService';
 import UpdateOperacaoService from '../services/UpdateOperacaoService';
+
+import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
+import ChequeOperacao from '../models/ChequeOperacao';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const OperacaoRouter = Router();
@@ -17,14 +20,18 @@ const OperacaoRouter = Router();
 
 OperacaoRouter.get('/:id', async (request, response) => {
   const operacaoRepository = getRepository(Operacao);
-  const operacao = await operacaoRepository.findOne(
-    request.params.id, 
-    );
-  const teste = await operacaoRepository.createQueryBuilder("operacao")
-  .innerJoinAndSelect("operacao.client", "clients")
-  .getMany();
-  console.log("teste:", teste);
-  console.log("operacao:", operacao);
+  
+  const operacao = await operacaoRepository.find(
+    
+    { where: { id: request.params.id }, 
+      relations: ["chequeOperacao"],
+    join: {
+      alias: "operacao",
+      leftJoinAndSelect: {
+        id: "operacao.client"
+      }
+    }});
+  
   return response.json(operacao);
 });
 
@@ -78,6 +85,7 @@ OperacaoRouter.post('/', async (request, response) => {
 OperacaoRouter.put('/:id', async (request, response) => {
   const { 
     id = request.params.id,
+    chequeOperacao,
     client_id,
     situacao,
     percentual,
@@ -92,9 +100,10 @@ OperacaoRouter.put('/:id', async (request, response) => {
     obs, } = request.body;
 
   const updateOperacaoService = new UpdateOperacaoService();
-
+  
   const operacao = await updateOperacaoService.execute({
     id,
+    chequeOperacao,
     client_id,
     situacao,
     percentual,
@@ -113,16 +122,24 @@ OperacaoRouter.put('/:id', async (request, response) => {
 });
 
 OperacaoRouter.delete('/:id', async (request, response) => {
+  const id = parseInt(request.params.id);
   const operacaoRepository = getCustomRepository(OperacaoRepository);
-  const operacao = await operacaoRepository.findOne(request.params.id);
+  const operacao = await operacaoRepository.findOne(id);
 
   if(!operacao) {
     throw new AppError('Não foi encontrato a Operação para Deletar!!');
   }
 
-  const resposta = await operacaoRepository.remove(operacao);
+  const chequeOperacaoRepository = getRepository(ChequeOperacao);
+  await chequeOperacaoRepository.delete({ operacao: operacao });
 
-  return response.json(resposta);
+  const removed = await operacaoRepository.remove(operacao);
+
+  if(!removed) {
+    throw new AppError('Houve em erro inesperado!!');
+  }
+
+  return response.json({msg: 'Foi excluido com Sucesso!'});
 });
 
 export default OperacaoRouter;

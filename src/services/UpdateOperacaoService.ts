@@ -2,13 +2,16 @@ import { getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 
+import ChequeOperacao from '../models/ChequeOperacao';
+import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
+
 import Operacao from '../models/Operacao';
 import OperacaoRepository from '../repositories/OperacaoRepository';
-import BancosRepository from '../repositories/BancosRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   id: string;
+  chequeOperacao: ChequeOperacao[];
   client_id: number;
   situacao: string;
   percentual: number;
@@ -27,6 +30,7 @@ class UpdateOperacaoService {
   public async execute({
     id,
     client_id,
+    chequeOperacao,
     situacao,
     percentual,
     tarifa,
@@ -65,10 +69,19 @@ class UpdateOperacaoService {
     operacaoPrev.total_liquido = total_liquido;
     operacaoPrev.total_outros = total_outros;
     operacaoPrev.obs = obs;
+    
+    const operacao =  await operacaoRepository.save(operacaoPrev);
 
-    const Operacao =  await operacaoRepository.save(operacaoPrev);
+    const chequeOperacaoService = new CreateChequeOperacaoService();
+    chequeOperacao.map(async co => {
+      co.operacao = operacao;
+      if(client) {
+        co.client = client;
+      }
+      await chequeOperacaoService.execute(co);
+    })
 
-    return Operacao;
+    return operacao;
   }
 }
 
