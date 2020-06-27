@@ -41,7 +41,13 @@ bancosRouter.post('/', async (request, response) => {
 });
 
 bancosRouter.put('/:id', async (request, response) => {
-  const { id = request.params.id, codigo, descricao, juros, prazo } = request.body;
+  const {
+    id = request.params.id,
+    codigo,
+    descricao,
+    juros,
+    prazo,
+  } = request.body;
 
   const updateBancoService = new UpdateBancoService();
 
@@ -60,7 +66,7 @@ bancosRouter.delete('/:id', async (request, response) => {
   const bancosRepository = getCustomRepository(BancosRepository);
   const banco = await bancosRepository.findOne(request.params.id);
 
-  if(!banco) {
+  if (!banco) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 

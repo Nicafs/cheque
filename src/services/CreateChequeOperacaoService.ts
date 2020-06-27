@@ -10,7 +10,6 @@ import Client from '../models/Client';
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import BancosRepository from '../repositories/BancosRepository';
 
-
 interface Request {
   operacao: Operacao | undefined;
   client: Client | undefined;
@@ -47,14 +46,18 @@ class CreateChequeOperacaoService {
     valor_encargos,
     emitente,
   }: Request): Promise<ChequeOperacao> {
-    const chequeOperacaoRepository = getCustomRepository(ChequeOperacaoRepository);
+    const chequeOperacaoRepository = getCustomRepository(
+      ChequeOperacaoRepository,
+    );
 
-    const findChequeOperacaoNumero = await chequeOperacaoRepository.findByChequeOperacao(numero);
+    const findChequeOperacaoNumero = await chequeOperacaoRepository.findByChequeOperacao(
+      numero,
+    );
 
     if (findChequeOperacaoNumero) {
       throw new AppError('Já existe o Número do Cheque Cadastrado');
     }
-
+    
     const bancosRepository = getCustomRepository(BancosRepository);
     const banco = await bancosRepository.findOne(banco_id);
 
@@ -77,7 +80,6 @@ class CreateChequeOperacaoService {
     });
 
     await chequeOperacaoRepository.save(chequeOperacao);
-
     return chequeOperacao;
   }
 }

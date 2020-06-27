@@ -12,14 +12,20 @@ const enderecoClientRouter = Router();
 // enderecoClientRouter.use(ensureAuthenzticated);
 
 enderecoClientRouter.get('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
-  const enderecoClient = await enderecoClientRepository.findOne(request.params.id);
+  const enderecoClientRepository = getCustomRepository(
+    EnderecoClientRepository,
+  );
+  const enderecoClient = await enderecoClientRepository.findOne(
+    request.params.id,
+  );
 
   return response.json(enderecoClient);
 });
 
 enderecoClientRouter.get('/', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
+  const enderecoClientRepository = getCustomRepository(
+    EnderecoClientRepository,
+  );
   const enderecoClient = await enderecoClientRepository.find();
 
   return response.json(enderecoClient);
@@ -38,7 +44,7 @@ enderecoClientRouter.post('/', async (request, response) => {
     numero,
     referencia,
     user_id,
-    client_id
+    client_id,
   } = request.body;
 
   const createenderecoClientervice = new CreateEnderecoClientService();
@@ -67,7 +73,7 @@ enderecoClientRouter.post('/', async (request, response) => {
 });
 
 enderecoClientRouter.put('/', async (request, response) => {
-  const { 
+  const {
     id,
     tipo,
     bairro,
@@ -80,7 +86,8 @@ enderecoClientRouter.put('/', async (request, response) => {
     numero,
     referencia,
     user_id,
-    client_id } = request.body;
+    client_id,
+  } = request.body;
 
   const updateEnderecoClientService = new UpdateEnderecoClientService();
 
@@ -97,17 +104,21 @@ enderecoClientRouter.put('/', async (request, response) => {
     numero,
     referencia,
     user_id,
-    client_id
+    client_id,
   });
 
   return response.json({ enderecoClient });
 });
 
 enderecoClientRouter.delete('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
-  const enderecoClient = await enderecoClientRepository.findOne(request.params.id);
+  const enderecoClientRepository = getCustomRepository(
+    EnderecoClientRepository,
+  );
+  const enderecoClient = await enderecoClientRepository.findOne(
+    request.params.id,
+  );
 
-  if(!enderecoClient) {
+  if (!enderecoClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 

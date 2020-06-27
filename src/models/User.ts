@@ -40,22 +40,34 @@ class User {
   @OneToMany(() => Operacao, (operacao: Operacao) => operacao.user)
   public operacao: Operacao[];
 
-  @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.user)
+  @OneToMany(
+    () => ChequeOperacao,
+    (chequeOperacao: ChequeOperacao) => chequeOperacao.user,
+  )
   public chequeOperacao: ChequeOperacao[];
 
   @OneToMany(() => BancoClient, (bancoClient: BancoClient) => bancoClient.user)
   public bancoClient: BancoClient[];
 
-  @OneToMany(() => EnderecoClient, (enderecoClient: EnderecoClient) => enderecoClient.user)
+  @OneToMany(
+    () => EnderecoClient,
+    (enderecoClient: EnderecoClient) => enderecoClient.user,
+  )
   public enderecoClient: EnderecoClient[];
 
-  @OneToMany(() => TelefoneClient, (telefoneClient: TelefoneClient) => telefoneClient.user)
+  @OneToMany(
+    () => TelefoneClient,
+    (telefoneClient: TelefoneClient) => telefoneClient.user,
+  )
   public telefoneClient: TelefoneClient[];
 
   @OneToMany(() => EmailClient, (emailClient: EmailClient) => emailClient.user)
   public emailClient: EmailClient[];
 
-  @OneToMany(() => ReferenciaClient, (referenciaClient: ReferenciaClient) => referenciaClient.user)
+  @OneToMany(
+    () => ReferenciaClient,
+    (referenciaClient: ReferenciaClient) => referenciaClient.user,
+  )
   public referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()

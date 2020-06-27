@@ -13,18 +13,30 @@ const clientsRouter = Router();
 
 clientsRouter.get('/:id', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
-  const client = await clientsRespository.findOne(request.params.id, 
-    { relations: ["bancoClient", "telefoneClient", "emailClient", 
-                  "enderecoClient", "referenciaClient"] });
+  const client = await clientsRespository.findOne(request.params.id, {
+    relations: [
+      'bancoClient',
+      'telefoneClient',
+      'emailClient',
+      'enderecoClient',
+      'referenciaClient',
+    ],
+  });
 
   return response.json(client);
 });
 
 clientsRouter.get('/', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
-  const clients = await clientsRespository.find(
-    { relations: ["bancoClient", "telefoneClient", "emailClient", 
-                  "enderecoClient", "referenciaClient"] });
+  const clients = await clientsRespository.find({
+    relations: [
+      'bancoClient',
+      'telefoneClient',
+      'emailClient',
+      'enderecoClient',
+      'referenciaClient',
+    ],
+  });
 
   return response.json(clients);
 });
@@ -38,29 +50,29 @@ clientsRouter.get('/', async (request, response) => {
 
 clientsRouter.post('/', async (request, response) => {
   const {
-  type,
-  name,
-  nickname,
-  gender,
-  cpf,
-  rg,
-  birthDate,
-  nome_pai,
-  nome_mae,
-  estado_civil,
-  conjugue,
-  credit,
-  limit,
-  acrescimo,
-  local_trabalho,
-  renda_mensal,
-  cargo,
-  user_id,
-  bancoClient,
-  enderecoClient,
-  telefoneClient,
-  emailClient,
-  referenciaClient,
+    type,
+    name,
+    nickname,
+    gender,
+    cpf,
+    rg,
+    birthDate,
+    nome_pai,
+    nome_mae,
+    estado_civil,
+    conjugue,
+    credit,
+    limit,
+    acrescimo,
+    local_trabalho,
+    renda_mensal,
+    cargo,
+    user_id,
+    bancoClient,
+    enderecoClient,
+    telefoneClient,
+    emailClient,
+    referenciaClient,
   } = request.body;
   const createClientService = new CreateClientService();
 
@@ -94,7 +106,7 @@ clientsRouter.post('/', async (request, response) => {
 });
 
 clientsRouter.put('/:id', async (request, response) => {
-  const { 
+  const {
     id = request.params.id,
     type,
     name,
@@ -117,7 +129,8 @@ clientsRouter.put('/:id', async (request, response) => {
     enderecoClient,
     telefoneClient,
     emailClient,
-    referenciaClient, } = request.body;
+    referenciaClient,
+  } = request.body;
 
   const updateClientService = new UpdateClientService();
 
@@ -154,7 +167,7 @@ clientsRouter.delete('/:id', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
   const client = await clientsRespository.findOne(request.params.id);
 
-  if(!client) {
+  if (!client) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 

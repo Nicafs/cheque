@@ -20,24 +20,28 @@ const OperacaoRouter = Router();
 
 OperacaoRouter.get('/:id', async (request, response) => {
   const operacaoRepository = getRepository(Operacao);
-  
-  const operacao = await operacaoRepository.find(
+
+  // const operacao = await operacaoRepository.find(
     
-    { where: { id: request.params.id }, 
-      relations: ["chequeOperacao"],
-    join: {
-      alias: "operacao",
-      leftJoinAndSelect: {
-        id: "operacao.client"
-      }
-    }});
-  
+  //   { where: { id: request.params.id }, 
+  //     relations: ["chequeOperacao"],
+  //   join: {
+  //     alias: "operacao",
+  //     leftJoinAndSelect: {
+  //       id: "operacao.client"
+  //     }
+  //   }});
+
+  const operacao = await operacaoRepository.findOne(request.params.id);
+
   return response.json(operacao);
 });
 
 OperacaoRouter.get('/', async (request, response) => {
   const operacaoRepository = getRepository(Operacao);
-  const operacao = await operacaoRepository.find({ relations: ["chequeOperacao"] });
+  const operacao = await operacaoRepository.find({
+    relations: ['chequeOperacao'],
+  });
 
   return response.json(operacao);
 });
@@ -62,6 +66,7 @@ OperacaoRouter.post('/', async (request, response) => {
 
   const createOperacaoService = new CreateOperacaoService();
 
+  console.log('Entrou no Create - body:', request.body);
   const operacao = await createOperacaoService.execute({
     client_id,
     chequeOperacao,
@@ -83,7 +88,7 @@ OperacaoRouter.post('/', async (request, response) => {
 });
 
 OperacaoRouter.put('/:id', async (request, response) => {
-  const { 
+  const {
     id = request.params.id,
     chequeOperacao,
     client_id,
@@ -97,7 +102,8 @@ OperacaoRouter.put('/:id', async (request, response) => {
     total_encargos,
     total_liquido,
     total_outros,
-    obs, } = request.body;
+    obs,
+  } = request.body;
 
   const updateOperacaoService = new UpdateOperacaoService();
   
@@ -126,7 +132,7 @@ OperacaoRouter.delete('/:id', async (request, response) => {
   const operacaoRepository = getCustomRepository(OperacaoRepository);
   const operacao = await operacaoRepository.findOne(id);
 
-  if(!operacao) {
+  if (!operacao) {
     throw new AppError('Não foi encontrato a Operação para Deletar!!');
   }
 

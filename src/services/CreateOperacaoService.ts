@@ -6,11 +6,10 @@ import Operacao from '../models/Operacao';
 import ChequeOperacao from '../models/ChequeOperacao';
 import User from '../models/User';
 
-import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
+import CreateChequeOperacaoService from './CreateChequeOperacaoService';
 
 import OperacaoRepository from '../repositories/OperacaoRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
-
 
 interface Request {
   chequeOperacao: ChequeOperacao[];
@@ -50,10 +49,9 @@ class CreateOperacaoService {
 
     const clientRepository = getCustomRepository(ClientsRepository);
     const client = await clientRepository.findOne(client_id);
-
+    
     const operacao = operacaoRepository.create({
       client,
-      chequeOperacao,
       user,
       situacao,
       percentual,
@@ -71,16 +69,16 @@ class CreateOperacaoService {
     await operacaoRepository.save(operacao);
 
     const chequeOperacaoService = new CreateChequeOperacaoService();
-    chequeOperacao.map(async co => {
+    chequeOperacao.map(async (co) => {
       co.operacao = operacao;
-      if(user) {
-        co.user = user;
-      }
-      if(client) {
+      if (client) {
         co.client = client;
       }
+      if (user) {
+        co.user = user;
+      }
       await chequeOperacaoService.execute(co);
-    })
+    });
 
     return operacao;
   }

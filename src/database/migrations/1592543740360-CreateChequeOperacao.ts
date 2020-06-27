@@ -5,7 +5,8 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateChequeOperacao1592543740360 implements MigrationInterface {
+export default class CreateChequeOperacao1592543740360
+  implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -60,7 +61,7 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
           },
           {
             name: 'dias',
-            type: 'numeric',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -157,7 +158,10 @@ export default class CreateChequeOperacao1592543740360 implements MigrationInter
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoOperacao');
+    await queryRunner.dropForeignKey(
+      'chequeOperacao',
+      'ChequeOperacaoOperacao',
+    );
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoClient');
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoBanco');
     await queryRunner.dropForeignKey('chequeOperacao', 'ChequeOperacaoUser');

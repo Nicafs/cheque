@@ -24,7 +24,7 @@ class Cheque {
   @ManyToOne(() => Client, (client) => client.cheque)
   @JoinColumn({ name: 'client_id' })
   client: Client;
-  
+
   @ManyToOne(() => User, (user) => user.cheque)
   @JoinColumn({ name: 'user_id' })
   user: User;

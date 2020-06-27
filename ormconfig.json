@@ -1,9 +1,9 @@
 {
   "type": "postgres",
   "host": "localhost",
-  "port": 5432,
+  "port": 5434,
   "username": "postgres",
-  "password": "admin",
+  "password": "cheque123",
   "database": "cheque",
   "entities": [
     "./src/models/*.ts"

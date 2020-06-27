@@ -26,7 +26,7 @@ class Client {
 
   @Column()
   type: string;
-  
+
   @Column()
   name: string;
 
@@ -91,16 +91,28 @@ class Client {
   @OneToMany(() => BancoClient, (bancoClient: BancoClient) => bancoClient.client)
   public bancoClient: BancoClient[];
 
-  @OneToMany(() => EnderecoClient, (enderecoClient: EnderecoClient) => enderecoClient.client)
+  @OneToMany(
+    () => EnderecoClient,
+    (enderecoClient: EnderecoClient) => enderecoClient.client,
+  )
   public enderecoClient: EnderecoClient[];
 
-  @OneToMany(() => TelefoneClient, (telefoneClient: TelefoneClient) => telefoneClient.client)
+  @OneToMany(
+    () => TelefoneClient,
+    (telefoneClient: TelefoneClient) => telefoneClient.client,
+  )
   public telefoneClient: TelefoneClient[];
 
-  @OneToMany(() => EmailClient, (emailClient: EmailClient) => emailClient.client)
+  @OneToMany(
+    () => EmailClient,
+    (emailClient: EmailClient) => emailClient.client,
+  )
   public emailClient: EmailClient[];
 
-  @OneToMany(() => ReferenciaClient, (referenciaClient: ReferenciaClient) => referenciaClient.client)
+  @OneToMany(
+    () => ReferenciaClient,
+    (referenciaClient: ReferenciaClient) => referenciaClient.client,
+  )
   public referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()

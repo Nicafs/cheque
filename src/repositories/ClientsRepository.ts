@@ -16,14 +16,24 @@ class ClientsRepository extends Repository<Client> {
     return findClientCpf || null;
   }
 
-  public async findByRgPrev(rg: string, rgPrev: string): Promise<Client | null> {
-    const findClientRg = await this.findOne({ where: { rg: [Not(rgPrev), rg] } });
+  public async findByRgPrev(
+    rg: string,
+    rgPrev: string,
+  ): Promise<Client | null> {
+    const findClientRg = await this.findOne({
+      where: { rg: [Not(rgPrev), rg] },
+    });
 
     return findClientRg || null;
   }
 
-  public async findByCpfPrev(cpf: string, cpfPrev: string): Promise<Client | null> {
-    const findClientCpf = await this.findOne({ where: { cpf: [Not(cpfPrev), cpf] } });
+  public async findByCpfPrev(
+    cpf: string,
+    cpfPrev: string,
+  ): Promise<Client | null> {
+    const findClientCpf = await this.findOne({
+      where: { cpf: [Not(cpfPrev), cpf] },
+    });
 
     return findClientCpf || null;
   }
