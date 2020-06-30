@@ -10,7 +10,6 @@ import OperacaoRepository from '../repositories/OperacaoRepository';
 import CreateOperacaoService from '../services/CreateOperacaoService';
 import UpdateOperacaoService from '../services/UpdateOperacaoService';
 
-import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import ChequeOperacao from '../models/ChequeOperacao';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
@@ -19,22 +18,22 @@ const OperacaoRouter = Router();
 // OperacaoRouter.use(ensureAuthenticated);
 
 OperacaoRouter.get('/:id', async (request, response) => {
+  const id = parseInt(request.params.id);
   const operacaoRepository = getRepository(Operacao);
 
-  // const operacao = await operacaoRepository.find(
+  const operacao = await operacaoRepository.find(
+    { where: { id: request.params.id }, 
+      relations: ["chequeOperacao"],
+    join: {
+      alias: "operacao",
+      leftJoinAndSelect: {
+        id: "operacao.client"
+      }
+    }});
     
-  //   { where: { id: request.params.id }, 
-  //     relations: ["chequeOperacao"],
-  //   join: {
-  //     alias: "operacao",
-  //     leftJoinAndSelect: {
-  //       id: "operacao.client"
-  //     }
-  //   }});
+  // const operacao = await operacaoRepository.findOne(id, { relations: ['chequeOperacao'] });
 
-  const operacao = await operacaoRepository.findOne(request.params.id);
-
-  return response.json(operacao);
+  return response.json(operacao[0]);
 });
 
 OperacaoRouter.get('/', async (request, response) => {

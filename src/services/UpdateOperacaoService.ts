@@ -75,6 +75,7 @@ class UpdateOperacaoService {
     const chequeOperacaoService = new CreateChequeOperacaoService();
     chequeOperacao.map(async co => {
       co.operacao = operacao;
+      
       if(client) {
         co.client = client;
       }

@@ -18,13 +18,14 @@ import {
     @PrimaryGeneratedColumn()
     id: number;
 
-    banco_id: number;
-
     operacao_id: number;
   
-    @ManyToOne(() => Banco, (banco) => banco.cheque)
+    @ManyToOne(() => Banco, (banco) => banco.cheque, { eager: true })
     @JoinColumn({ name: 'banco_id' })
     banco: Banco;
+
+    banco_id: number = this.banco?.id;
+    banco_descricao: string = this.banco?.descricao;
   
     @ManyToOne(type => Operacao, operacao => operacao.chequeOperacao, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'operacao_id' })
