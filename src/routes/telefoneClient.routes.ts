@@ -1,130 +1,111 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
-import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
-import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
+
+import Client from '../models/Client';
+import User from '../models/User';
+
+import TelefoneClientRepository from '../repositories/TelefoneClientRepository';
+import CreateTelefoneClientService from '../services/CreateTelefoneClientService';
+import UpdateTelefoneClientService from '../services/UpdateTelefoneClientService';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
-const enderecoClientRouter = Router();
+const telefoneClientRouter = Router();
 
-// enderecoClientRouter.use(ensureAuthenzticated);
+// telefoneClientRouter.use(ensureAuthenzticated);
 
-enderecoClientRouter.get('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+telefoneClientRouter.get('/:id', async (request, response) => {
+  const telefoneClientRepository = getCustomRepository(
+    TelefoneClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const telefoneClient = await telefoneClientRepository.findOne(
     request.params.id,
   );
 
-  return response.json(enderecoClient);
+  return response.json(telefoneClient);
 });
 
-enderecoClientRouter.get('/', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+telefoneClientRouter.get('/', async (request, response) => {
+  const telefoneClientRepository = getCustomRepository(
+    TelefoneClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.find();
+  const telefoneClient = await telefoneClientRepository.find();
 
-  return response.json(enderecoClient);
+  return response.json(telefoneClient);
 });
 
-enderecoClientRouter.post('/', async (request, response) => {
+telefoneClientRouter.post('/', async (request, response) => {
   const {
     tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
     numero,
-    referencia,
-    user_id,
     client_id,
+    user_id,
   } = request.body;
 
-  const createenderecoClientervice = new CreateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
 
   const user = undefined;
-  const client = undefined;
 
-  const enderecoClient = await createenderecoClientervice.execute({
+  const createTelefoneClientervice = new CreateTelefoneClientService();
+  const telefoneClient = await createTelefoneClientervice.execute({
     tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
     numero,
-    referencia,
-    user_id,
-    client_id,
-    user,
     client,
+    user,
   });
 
-  return response.json({ enderecoClient });
+  return response.json({ telefoneClient });
 });
 
-enderecoClientRouter.put('/', async (request, response) => {
+telefoneClientRouter.put('/:id', async (request, response) => {
   const {
-    id,
+    id = request.params.id,
     tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
     numero,
-    referencia,
-    user_id,
     client_id,
+    user_id,
   } = request.body;
 
-  const updateEnderecoClientService = new UpdateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
 
-  const enderecoClient = await updateEnderecoClientService.execute({
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
+
+  const user = undefined;
+
+  const updateTelefoneClientService = new UpdateTelefoneClientService();
+  const telefoneClient = await updateTelefoneClientService.execute({
     id,
     tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
     numero,
-    referencia,
-    user_id,
-    client_id,
+    client,
+    user,
   });
 
-  return response.json({ enderecoClient });
+  return response.json({ telefoneClient });
 });
 
-enderecoClientRouter.delete('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+telefoneClientRouter.delete('/:id', async (request, response) => {
+  const telefoneClientRepository = getCustomRepository(
+    TelefoneClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const telefoneClient = await telefoneClientRepository.findOne(
     request.params.id,
   );
 
-  if (!enderecoClient) {
+  if (!telefoneClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 
-  const resposta = await enderecoClientRepository.remove(enderecoClient);
+  const resposta = await telefoneClientRepository.remove(telefoneClient);
 
   return response.json(resposta);
 });
 
-export default enderecoClientRouter;
+export default telefoneClientRouter;

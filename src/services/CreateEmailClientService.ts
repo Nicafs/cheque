@@ -9,8 +9,8 @@ import User from '../models/User';
 interface Request {
     email: string;
     principal: boolean;
-    user: User;
-    client: Client;
+    user: User | undefined;
+    client: Client | undefined;
 }
 
 class CreateEmailClienttService {

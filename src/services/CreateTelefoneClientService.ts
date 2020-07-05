@@ -9,8 +9,8 @@ import User from '../models/User';
 interface Request {
     tipo: string;
     numero: string;
-    user: User;
-    client: Client;
+    user: User | undefined;
+    client: Client | undefined;
 }
 
 class CreateTelefoneClientService {
@@ -26,6 +26,10 @@ class CreateTelefoneClientService {
 
     if (findTelefoneClient) {
       throw new AppError('Já existe o telefone cadastrado');
+    }
+    
+    if(!client) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
     const telefoneClient = telefoneClientRepository.create({

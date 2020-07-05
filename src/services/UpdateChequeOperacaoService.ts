@@ -2,14 +2,21 @@ import { getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 
+import Operacao from '../models/Operacao';
+import User from '../models/User';
+import Client from '../models/Client';
+import Banco from '../models/Banco';
 import ChequeOperacao from '../models/ChequeOperacao';
+
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import BancosRepository from '../repositories/BancosRepository';
-import OperacaoRepository from '../repositories/OperacaoRepository';
 
 interface Request {
-  id: string;
-  banco_id: string;
+  id: number;
+  operacao: Operacao | undefined;
+  client: Client | undefined;
+  user: User | undefined;
+  banco: Banco | undefined;
   tipo: string;
   agencia: number;
   conta: number;
@@ -26,7 +33,7 @@ interface Request {
 class UpdateChequeOperacaoService {
   public async execute({
     id,
-    banco_id,
+    banco,
     tipo,
     agencia,
     conta,
@@ -55,11 +62,15 @@ class UpdateChequeOperacaoService {
         }
     }
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const banco = await bancosRepository.findOne(banco_id);
+    if (!banco) {
+      throw new AppError('Informe um Banco para cadastro');
+    }
 
-    if(banco) {
-        chequeOperacaoPrev.banco = banco;
+    const bancosRepository = getCustomRepository(BancosRepository);
+    const bancoData = await bancosRepository.findOne(banco.id);
+
+    if(bancoData) {
+        chequeOperacaoPrev.banco = bancoData;
     }
     chequeOperacaoPrev.tipo = tipo;
     chequeOperacaoPrev.agencia = agencia;

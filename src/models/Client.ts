@@ -88,32 +88,34 @@ class Client {
   @OneToMany(() => ChequeOperacao, (chequeOperacao: ChequeOperacao) => chequeOperacao.client)
   public chequeOperacao: ChequeOperacao[];
 
-  @OneToMany(() => BancoClient, (bancoClient: BancoClient) => bancoClient.client)
-  public bancoClient: BancoClient[];
+  @OneToMany(
+    type  => BancoClient, 
+    bancoClient => bancoClient.client)
+    bancoClient: BancoClient[];
 
   @OneToMany(
-    () => EnderecoClient,
-    (enderecoClient: EnderecoClient) => enderecoClient.client,
+    type  => EnderecoClient,
+    enderecoClient => enderecoClient.client
   )
-  public enderecoClient: EnderecoClient[];
+  enderecoClient: EnderecoClient[];
 
   @OneToMany(
-    () => TelefoneClient,
-    (telefoneClient: TelefoneClient) => telefoneClient.client,
+    type  => TelefoneClient,
+    telefoneClient => telefoneClient.client
   )
-  public telefoneClient: TelefoneClient[];
+  telefoneClient: TelefoneClient[];
 
   @OneToMany(
-    () => EmailClient,
-    (emailClient: EmailClient) => emailClient.client,
+    type  => EmailClient,
+    emailClient => emailClient.client
   )
-  public emailClient: EmailClient[];
+  emailClient: EmailClient[];
 
   @OneToMany(
-    () => ReferenciaClient,
-    (referenciaClient: ReferenciaClient) => referenciaClient.client,
+    type  => ReferenciaClient,
+    referenciaClient => referenciaClient.client
   )
-  public referenciaClient: ReferenciaClient[];
+  referenciaClient: ReferenciaClient[];
 
   @CreateDateColumn()
   created_at: Date;

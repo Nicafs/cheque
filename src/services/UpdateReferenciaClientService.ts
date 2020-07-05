@@ -5,12 +5,15 @@ import AppError from '../errors/AppError';
 import ReferenciaClient from '../models/ReferenciaClient';
 import ReferenciaClientRepository from '../repositories/ReferenciaClientRepository';
 
+import Client from '../models/Client';
+import User from '../models/User';
+
 interface Request {
   id: string,
   nome: string;
   telefone: string;
-  user_id: string;
-  client_id: number;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class UpdateReferenciaService {
@@ -18,8 +21,8 @@ class UpdateReferenciaService {
     id,
     nome,
     telefone,
-    user_id,
-    client_id,
+    user,
+    client,
   }: Request): Promise<ReferenciaClient> {
     const referenciaClientRepository = getCustomRepository(ReferenciaClientRepository);
 
@@ -29,12 +32,17 @@ class UpdateReferenciaService {
         throw new AppError('Não foi encontrato o Cadastro para Atualizar!!');
     }
 
-    if(referenciaPrev?.nome !== nome || referenciaPrev?.telefone !== telefone) {
-        const findReferencia = await referenciaClientRepository.findByReferencia(nome, telefone, client_id);
+    if(!client) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    }
 
-        if (findReferencia) {
-        throw new AppError('Já existe o E-mail cadastrado');
-        }
+    if(referenciaPrev?.nome !== nome || referenciaPrev?.telefone !== telefone) {
+      const client_id = client.id;
+      const findReferencia = await referenciaClientRepository.findByReferencia(nome, telefone, client_id);
+
+      if (findReferencia) {
+      throw new AppError('Já existe o E-mail cadastrado');
+      }
     }
 
     referenciaPrev.nome = nome;

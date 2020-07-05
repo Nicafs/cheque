@@ -4,6 +4,7 @@ import AppError from '../errors/AppError';
 
 import ChequeOperacao from '../models/ChequeOperacao';
 import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
+import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
 
 import Operacao from '../models/Operacao';
 import OperacaoRepository from '../repositories/OperacaoRepository';
@@ -72,14 +73,20 @@ class UpdateOperacaoService {
     
     const operacao =  await operacaoRepository.save(operacaoPrev);
 
-    const chequeOperacaoService = new CreateChequeOperacaoService();
     chequeOperacao.map(async co => {
       co.operacao = operacao;
       
       if(client) {
         co.client = client;
       }
-      await chequeOperacaoService.execute(co);
+      
+      if(co.id) {
+        const chequeOperacaoService = new UpdateChequeOperacaoService();
+        await chequeOperacaoService.execute(co);
+      } else {
+        const chequeOperacaoService = new CreateChequeOperacaoService();
+        await chequeOperacaoService.execute(co);
+      }
     })
 
     return operacao;

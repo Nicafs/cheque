@@ -5,6 +5,9 @@ import AppError from '../errors/AppError';
 import EnderecoClient from '../models/EnderecoClient';
 import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
 
+import Client from '../models/Client';
+import User from '../models/User';
+
 interface Request {
   id: string,
   tipo: string;
@@ -17,8 +20,8 @@ interface Request {
   logradouro: string;
   numero: number;
   referencia: string;
-  user_id: string;
-  client_id: number;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class UpdateEnderecoService {
@@ -34,8 +37,8 @@ class UpdateEnderecoService {
     logradouro,
     numero,
     referencia,
-    user_id,
-    client_id,
+    user,
+    client,
   }: Request): Promise<EnderecoClient> {
     const enderecoClientRepository = getCustomRepository(EnderecoClientRepository);
 
@@ -45,10 +48,15 @@ class UpdateEnderecoService {
         throw new AppError('Não foi encontrato o Endereço para Atualizar!!');
     }
 
+    if(!client) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    }
+
     if(enderecoPrev?.cep !== cep || enderecoPrev?.cidade !== cidade || enderecoPrev?.estado !== estado
         || enderecoPrev?.bairro !== bairro || enderecoPrev?.numero !== numero
         || enderecoPrev?.logradouro !== logradouro) {
-        const findEndereco = 
+      const client_id = client.id;
+      const findEndereco = 
             await enderecoClientRepository.findByEndereco( cep, cidade, estado, bairro, 
                                                             numero, logradouro, client_id);
 

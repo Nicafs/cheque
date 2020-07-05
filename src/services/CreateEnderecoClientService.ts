@@ -17,8 +17,6 @@ interface Request {
     logradouro: string;
     numero: number;
     referencia: string;
-    user_id: string;
-    client_id: number;
     user: User | undefined;
     client: Client | undefined;
 }
@@ -37,8 +35,6 @@ class CreateEnderecoClientService {
     referencia,
     user,
     client,
-    user_id,
-    client_id,
   }: Request): Promise<EnderecoClient> {
       
     const enderecoClientRepository = getRepository(EnderecoClient);
@@ -48,14 +44,13 @@ class CreateEnderecoClientService {
       throw new AppError('Já existe o endereço cadastrado');
     }
 
-    if(!user) {
-      const userRepository = getRepository(User);
-      user = await userRepository.findOne(user_id) as User;
-    }
+    // if(!user) {
+    //   const userRepository = getRepository(User);
+    //   user = await userRepository.findOne(user_id) as User;
+    // }
 
     if(!client) {
-      const clientRepository = getRepository(Client);
-      client = await clientRepository.findOne(client_id) as Client;
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
     const enderecoClient = enderecoClientRepository.create({

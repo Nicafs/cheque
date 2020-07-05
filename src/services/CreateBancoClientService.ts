@@ -10,9 +10,9 @@ import Banco from '../models/Banco';
 interface Request {
     agencia: number;
     conta: number;
-    banco: Banco;
-    user: User;
-    client: Client;
+    banco: Banco | undefined;
+    user: User | undefined;
+    client: Client | undefined;
 }
 
 class CreateBancoClientService {

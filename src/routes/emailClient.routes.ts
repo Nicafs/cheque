@@ -1,130 +1,111 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
-import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
-import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
+
+import Client from '../models/Client';
+import User from '../models/User';
+
+import EmailClientRepository from '../repositories/EmailClientRepository';
+import CreateEmailClientService from '../services/CreateEmailClientService';
+import UpdateEmailClientService from '../services/UpdateEmailClientService';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
-const enderecoClientRouter = Router();
+const emailClientRouter = Router();
 
-// enderecoClientRouter.use(ensureAuthenzticated);
+// emailClientRouter.use(ensureAuthenzticated);
 
-enderecoClientRouter.get('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+emailClientRouter.get('/:id', async (request, response) => {
+  const emailClientRepository = getCustomRepository(
+    EmailClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const emailClient = await emailClientRepository.findOne(
     request.params.id,
   );
 
-  return response.json(enderecoClient);
+  return response.json(emailClient);
 });
 
-enderecoClientRouter.get('/', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+emailClientRouter.get('/', async (request, response) => {
+  const emailClientRepository = getCustomRepository(
+    EmailClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.find();
+  const emailClient = await emailClientRepository.find();
 
-  return response.json(enderecoClient);
+  return response.json(emailClient);
 });
 
-enderecoClientRouter.post('/', async (request, response) => {
+emailClientRouter.post('/', async (request, response) => {
   const {
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
+    email,
+    principal,
     client_id,
+    user_id,
   } = request.body;
 
-  const createenderecoClientervice = new CreateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
 
   const user = undefined;
-  const client = undefined;
 
-  const enderecoClient = await createenderecoClientervice.execute({
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
+  const createEmailClientService = new CreateEmailClientService();
+  const emailClient = await createEmailClientService.execute({
+    email,
+    principal,
+    client,
+    user,
+  });
+
+  return response.json({ emailClient });
+});
+
+emailClientRouter.put('/:id', async (request, response) => {
+  const {
+    id = request.params.id,
+    email,
+    principal,
     client_id,
+    user_id,
+  } = request.body;
+
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
+
+  const user = undefined;
+
+  const updateEmailClientService = new UpdateEmailClientService();
+  const emailClient = await updateEmailClientService.execute({
+    id,
+    email,
+    principal,
     user,
     client,
   });
 
-  return response.json({ enderecoClient });
+  return response.json({ emailClient });
 });
 
-enderecoClientRouter.put('/', async (request, response) => {
-  const {
-    id,
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
-    client_id,
-  } = request.body;
-
-  const updateEnderecoClientService = new UpdateEnderecoClientService();
-
-  const enderecoClient = await updateEnderecoClientService.execute({
-    id,
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
-    client_id,
-  });
-
-  return response.json({ enderecoClient });
-});
-
-enderecoClientRouter.delete('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+emailClientRouter.delete('/:id', async (request, response) => {
+  const emailClientRepository = getCustomRepository(
+    EmailClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const emailClient = await emailClientRepository.findOne(
     request.params.id,
   );
 
-  if (!enderecoClient) {
+  if (!emailClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 
-  const resposta = await enderecoClientRepository.remove(enderecoClient);
+  const resposta = await emailClientRepository.remove(emailClient);
 
   return response.json(resposta);
 });
 
-export default enderecoClientRouter;
+export default emailClientRouter;

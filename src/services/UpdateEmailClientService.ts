@@ -5,12 +5,15 @@ import AppError from '../errors/AppError';
 import EmailClient from '../models/EmailClient';
 import EmailClientRepository from '../repositories/EmailClientRepository';
 
+import Client from '../models/Client';
+import User from '../models/User';
+
 interface Request {
   id: string,
   email: string;
   principal: boolean;
-  user_id: string;
-  client_id: number;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class UpdateEmailService {
@@ -18,8 +21,8 @@ class UpdateEmailService {
     id,
     email,
     principal,
-    user_id,
-    client_id,
+    user,
+    client,
   }: Request): Promise<EmailClient> {
     const emailClientRepository = getCustomRepository(EmailClientRepository);
 
@@ -29,12 +32,17 @@ class UpdateEmailService {
         throw new AppError('Não foi encontrato o Email para Atualizar!!');
     }
 
-    if(emailPrev?.email !== email) {
-        const findEmail = await emailClientRepository.findByEmail(email, client_id);
+    if(!client) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    }
 
-        if (findEmail) {
-        throw new AppError('Já existe o E-mail cadastrado');
-        }
+    if(emailPrev?.email !== email) {
+      const client_id = client.id;
+      const findEmail = await emailClientRepository.findByEmail(email, client_id);
+
+      if (findEmail) {
+      throw new AppError('Já existe o E-mail cadastrado');
+      }
     }
 
     emailPrev.email = email;

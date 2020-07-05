@@ -9,8 +9,8 @@ import User from '../models/User';
 interface Request {
     nome: string;
     telefone: string;
-    user: User;
-    client: Client;
+    user: User | undefined;
+    client: Client | undefined;
 }
 
 class CreateReferenciaClientService {

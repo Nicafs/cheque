@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
@@ -9,6 +9,7 @@ import UsersRepository from '../repositories/UsersRepository';
 import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
 import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
 import User from '../models/User';
+import Banco from '../models/Banco';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const chequeOperacaoRouter = Router();
@@ -39,7 +40,8 @@ chequeOperacaoRouter.post('/', async (request, response) => {
   const {
     operacao_id,
     user_id,
-    banco_id,
+    client,
+    banco,
     tipo,
     agencia,
     conta,
@@ -59,12 +61,16 @@ chequeOperacaoRouter.post('/', async (request, response) => {
   const usersRepository = getCustomRepository(UsersRepository);
   const user = await usersRepository.findOne(user_id);
 
+  const bancoRepository = getRepository(Banco);
+  const bancoData = await bancoRepository.findOne(banco.id);
+
   const createChequeOperacaoService = new CreateChequeOperacaoService();
 
   const chequeOperacao = await createChequeOperacaoService.execute({
     operacao,
     user,
-    banco_id,
+    client,
+    banco: bancoData,
     tipo,
     agencia,
     conta,
@@ -84,7 +90,7 @@ chequeOperacaoRouter.post('/', async (request, response) => {
 chequeOperacaoRouter.put('/:id', async (request, response) => {
   const {
     id = request.params.id,
-    banco_id,
+    banco,
     tipo,
     agencia,
     conta,
@@ -102,7 +108,7 @@ chequeOperacaoRouter.put('/:id', async (request, response) => {
 
   const chequeOperacao = await updateChequeOperacaoService.execute({
     id,
-    banco_id,
+    banco,
     tipo,
     agencia,
     conta,

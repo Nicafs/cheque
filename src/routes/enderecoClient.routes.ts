@@ -1,7 +1,11 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
+
+import Client from '../models/Client';
+import User from '../models/User';
+
 import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
 import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
 import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
@@ -47,12 +51,16 @@ enderecoClientRouter.post('/', async (request, response) => {
     client_id,
   } = request.body;
 
-  const createenderecoClientervice = new CreateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
 
   const user = undefined;
-  const client = undefined;
 
-  const enderecoClient = await createenderecoClientervice.execute({
+  const createEnderecoClientService = new CreateEnderecoClientService();
+  const enderecoClient = await createEnderecoClientService.execute({
     tipo,
     bairro,
     cep,
@@ -63,8 +71,6 @@ enderecoClientRouter.post('/', async (request, response) => {
     logradouro,
     numero,
     referencia,
-    user_id,
-    client_id,
     user,
     client,
   });
@@ -72,9 +78,9 @@ enderecoClientRouter.post('/', async (request, response) => {
   return response.json({ enderecoClient });
 });
 
-enderecoClientRouter.put('/', async (request, response) => {
+enderecoClientRouter.put('/:id', async (request, response) => {
   const {
-    id,
+    id = request.params.id,
     tipo,
     bairro,
     cep,
@@ -89,8 +95,15 @@ enderecoClientRouter.put('/', async (request, response) => {
     client_id,
   } = request.body;
 
-  const updateEnderecoClientService = new UpdateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
 
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
+
+  const user = undefined;
+
+  const updateEnderecoClientService = new UpdateEnderecoClientService();
   const enderecoClient = await updateEnderecoClientService.execute({
     id,
     tipo,
@@ -103,8 +116,8 @@ enderecoClientRouter.put('/', async (request, response) => {
     logradouro,
     numero,
     referencia,
-    user_id,
-    client_id,
+    user,
+    client,
   });
 
   return response.json({ enderecoClient });

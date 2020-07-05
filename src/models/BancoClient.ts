@@ -23,16 +23,20 @@ class BancoClient {
   @Column()
   conta: number;
 
-  @ManyToOne(() => Client, (client) => client.bancoClient)
-  @JoinColumn({ name: 'client_id' })
+  @ManyToOne(type  => Client, client => client.bancoClient)
+  @JoinColumn({ name: 'client_id', referencedColumnName: 'id' })
   client: Client;
 
-  @ManyToOne(() => User, (user) => user.bancoClient)
-  @JoinColumn({ name: 'user_id' })
+  client_id: number;
+
+  @ManyToOne(type  => User, user => user.bancoClient)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  @ManyToOne(() => Banco, (banco) => banco.bancoClient)
-  @JoinColumn({ name: 'banco_id' })
+  user_id: string;
+
+  @ManyToOne(type  => Banco, banco => banco.bancoClient)
+  @JoinColumn({ name: 'banco_id', referencedColumnName: 'id' })
   banco: Banco;
 
   @CreateDateColumn()

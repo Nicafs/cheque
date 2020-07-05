@@ -26,9 +26,13 @@ class ReferenciaClient {
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
+  client_id: number;
+
   @ManyToOne(() => User, (user) => user.referenciaClient)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  user_id: string;
 
   @CreateDateColumn()
   created_at: Date;

@@ -1,130 +1,122 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
-import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
-import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
-import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
+
+import Client from '../models/Client';
+import User from '../models/User';
+import Banco from '../models/Banco';
+
+import BancoClientRepository from '../repositories/BancoClientRepository';
+import CreateBancoClientService from '../services/CreateBancoClientService';
+import UpdateBancoClientService from '../services/UpdateBancoClientService';
 // import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
-const enderecoClientRouter = Router();
+const bancoClientRouter = Router();
 
-// enderecoClientRouter.use(ensureAuthenzticated);
+// bancoClientRouter.use(ensureAuthenzticated);
 
-enderecoClientRouter.get('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+bancoClientRouter.get('/:id', async (request, response) => {
+  const bancoClientRepository = getCustomRepository(
+    BancoClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const bancoClient = await bancoClientRepository.findOne(
     request.params.id,
   );
 
-  return response.json(enderecoClient);
+  return response.json(bancoClient);
 });
 
-enderecoClientRouter.get('/', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+bancoClientRouter.get('/', async (request, response) => {
+  const bancoClientRepository = getCustomRepository(
+    BancoClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.find();
+  const bancoClient = await bancoClientRepository.find();
 
-  return response.json(enderecoClient);
+  return response.json(bancoClient);
 });
 
-enderecoClientRouter.post('/', async (request, response) => {
+bancoClientRouter.post('/', async (request, response) => {
   const {
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
+    agencia,
+    conta,
+    banco_id,
     client_id,
+    user_id,
   } = request.body;
 
-  const createenderecoClientervice = new CreateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
+
+  const bancoRepository = getRepository(Banco);
+  const banco = await bancoRepository.findOne(banco_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
 
   const user = undefined;
-  const client = undefined;
 
-  const enderecoClient = await createenderecoClientervice.execute({
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
-    client_id,
+  const createBancoClientService = new CreateBancoClientService();
+  const bancoClient = await createBancoClientService.execute({
+    agencia,
+    conta,
+    banco,
     user,
     client,
   });
 
-  return response.json({ enderecoClient });
+  return response.json({ bancoClient });
 });
 
-enderecoClientRouter.put('/', async (request, response) => {
+bancoClientRouter.put('/:id', async (request, response) => {
   const {
-    id,
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
+    id = request.params.id,
+    agencia,
+    conta,
+    banco_id,
     user_id,
     client_id,
   } = request.body;
 
-  const updateEnderecoClientService = new UpdateEnderecoClientService();
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository.findOne(client_id);
 
-  const enderecoClient = await updateEnderecoClientService.execute({
+  const bancoRepository = getRepository(Banco);
+  const banco = await bancoRepository.findOne(banco_id);
+
+  // const userRepository = getRepository(User);
+  // const user = await userRepository.findOne(user_id);
+
+  const user = undefined;
+
+  const updateBancoClientService = new UpdateBancoClientService();
+  const bancoClient = await updateBancoClientService.execute({
     id,
-    tipo,
-    bairro,
-    cep,
-    cidade,
-    estado,
-    complemento,
-    tipo_logradouro,
-    logradouro,
-    numero,
-    referencia,
-    user_id,
-    client_id,
+    agencia,
+    conta,
+    banco,
+    user,
+    client,
   });
 
-  return response.json({ enderecoClient });
+  return response.json({ bancoClient });
 });
 
-enderecoClientRouter.delete('/:id', async (request, response) => {
-  const enderecoClientRepository = getCustomRepository(
-    EnderecoClientRepository,
+bancoClientRouter.delete('/:id', async (request, response) => {
+  const bancoClientRepository = getCustomRepository(
+    BancoClientRepository,
   );
-  const enderecoClient = await enderecoClientRepository.findOne(
+  const bancoClient = await bancoClientRepository.findOne(
     request.params.id,
   );
 
-  if (!enderecoClient) {
+  if (!bancoClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 
-  const resposta = await enderecoClientRepository.remove(enderecoClient);
+  const resposta = await bancoClientRepository.remove(bancoClient);
 
   return response.json(resposta);
 });
 
-export default enderecoClientRouter;
+export default bancoClientRouter;

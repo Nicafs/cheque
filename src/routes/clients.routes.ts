@@ -13,7 +13,8 @@ const clientsRouter = Router();
 
 clientsRouter.get('/:id', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
-  const client = await clientsRespository.findOne(request.params.id, {
+  const clients = await clientsRespository.findOne({
+    where: { id: request.params.id },
     relations: [
       'bancoClient',
       'telefoneClient',
@@ -23,11 +24,12 @@ clientsRouter.get('/:id', async (request, response) => {
     ],
   });
 
-  return response.json(client);
+  return response.json(clients);
 });
 
 clientsRouter.get('/', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
+
   const clients = await clientsRespository.find({
     relations: [
       'bancoClient',

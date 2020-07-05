@@ -5,15 +5,18 @@ import AppError from '../errors/AppError';
 import BancoClient from '../models/BancoClient';
 import BancoClientRepository from '../repositories/BancoClientRepository';
 import BancosRepository from '../repositories/BancosRepository';
+
+import Client from '../models/Client';
+import User from '../models/User';
 import Banco from '../models/Banco';
 
 interface Request {
   id: string,
   agencia: number;
   conta: number;
-  banco_id: number;
-  user_id: string;
-  client_id: number;
+  banco: Banco | undefined;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class UpdateBancoService {
@@ -21,9 +24,9 @@ class UpdateBancoService {
     id,
     agencia,
     conta,
-    banco_id,
-    user_id,
-    client_id,
+    banco,
+    user,
+    client,
   }: Request): Promise<BancoClient> {
     const bancoClientRepository = getCustomRepository(BancoClientRepository);
 
@@ -33,16 +36,19 @@ class UpdateBancoService {
         throw new AppError('Não foi encontrato o Banco para Atualizar!!');
     }
 
-    if(bancoPrev?.agencia !== agencia || bancoPrev?.conta !== conta  || bancoPrev?.banco.id !== banco_id) {
-        const findBanco = await bancoClientRepository.findByBanco(agencia, conta, banco_id, client_id);
-
-        if (findBanco) {
-        throw new AppError('Já existe o Banco cadastrado');
-        }
+    if(!client) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const banco = await bancosRepository.findOne(banco_id);
+    if(bancoPrev?.agencia !== agencia || bancoPrev?.conta !== conta  || bancoPrev?.banco.id !== banco_id) {
+      const client_id = client.id;
+      const banco_id = banco?.id;
+      const findBanco = await bancoClientRepository.findByBanco(agencia, conta, banco_id, client_id);
+
+      if (findBanco) {
+      throw new AppError('Já existe o Banco cadastrado');
+      }
+    }
 
     if(banco) {
         bancoPrev.banco = banco;

@@ -6,6 +6,7 @@ import ChequeOperacao from '../models/ChequeOperacao';
 import Operacao from '../models/Operacao';
 import User from '../models/User';
 import Client from '../models/Client';
+import Banco from '../models/Banco';
 
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import BancosRepository from '../repositories/BancosRepository';
@@ -14,7 +15,7 @@ interface Request {
   operacao: Operacao | undefined;
   client: Client | undefined;
   user: User | undefined;
-  banco_id: number;
+  banco: Banco | undefined;
   tipo: string;
   agencia: number;
   conta: number;
@@ -33,7 +34,7 @@ class CreateChequeOperacaoService {
     operacao,
     user,
     client,
-    banco_id,
+    banco,
     tipo,
     agencia,
     conta,
@@ -57,17 +58,21 @@ class CreateChequeOperacaoService {
     if (findChequeOperacaoNumero) {
       throw new AppError('Já existe o Número do Cheque Cadastrado');
     }
+
+    if (!banco) {
+      throw new AppError('Informe um Banco para cadastro');
+    }
     
     const bancosRepository = getCustomRepository(BancosRepository);
-    const banco = await bancosRepository.findOne(banco_id);
+    const bancoData = await bancosRepository.findOne(banco.id);
 
     const chequeOperacao = chequeOperacaoRepository.create({
       operacao,
       user,
       client,
-      banco,
+      banco: bancoData,
       tipo,
-      agencia,
+      agencia,  
       conta,
       numero,
       dias,
