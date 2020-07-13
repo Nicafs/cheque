@@ -5,11 +5,8 @@ import AppError from '../errors/AppError';
 import ClientsRepository from '../repositories/ClientsRepository';
 import CreateClientService from '../services/CreateClientService';
 import UpdateClientService from '../services/UpdateClientService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const clientsRouter = Router();
-
-// clientsRouter.use(ensureAuthenticated);
 
 clientsRouter.get('/:id', async (request, response) => {
   const clientsRespository = getCustomRepository(ClientsRepository);
@@ -43,13 +40,6 @@ clientsRouter.get('/', async (request, response) => {
   return response.json(clients);
 });
 
-// clientsRouter.put('/:id', async (request, response) => {
-//   const clientsRespository = getCustomRepository(ClientsRepository);
-//   const client = await clientsRespository.update(request.params.id, request.body);
-
-//   return response.json(client);
-// });
-
 clientsRouter.post('/', async (request, response) => {
   const {
     type,
@@ -69,15 +59,15 @@ clientsRouter.post('/', async (request, response) => {
     local_trabalho,
     renda_mensal,
     cargo,
-    user_id,
     bancoClient,
     enderecoClient,
     telefoneClient,
     emailClient,
     referenciaClient,
   } = request.body;
-  const createClientService = new CreateClientService();
+  const { userId } = request.user;
 
+  const createClientService = new CreateClientService();
   const client = await createClientService.execute({
     type,
     name,
@@ -96,7 +86,7 @@ clientsRouter.post('/', async (request, response) => {
     local_trabalho,
     renda_mensal,
     cargo,
-    user_id,
+    userId,
     bancoClient,
     enderecoClient,
     telefoneClient,
@@ -127,15 +117,10 @@ clientsRouter.put('/:id', async (request, response) => {
     local_trabalho,
     renda_mensal,
     cargo,
-    bancoClient,
-    enderecoClient,
-    telefoneClient,
-    emailClient,
-    referenciaClient,
   } = request.body;
+  const { userId } = request.user;
 
   const updateClientService = new UpdateClientService();
-
   const client = await updateClientService.execute({
     id,
     type,
@@ -155,11 +140,7 @@ clientsRouter.put('/:id', async (request, response) => {
     local_trabalho,
     renda_mensal,
     cargo,
-    bancoClient,
-    enderecoClient,
-    telefoneClient,
-    emailClient,
-    referenciaClient,
+    userId,
   });
 
   return response.json({ client });

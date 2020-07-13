@@ -23,19 +23,19 @@ class BancoClient {
   @Column()
   conta: number;
 
-  @ManyToOne(type  => Client, client => client.bancoClient)
+  @ManyToOne((type) => Client, (client) => client.bancoClient)
   @JoinColumn({ name: 'client_id', referencedColumnName: 'id' })
   client: Client;
 
   client_id: number;
 
-  @ManyToOne(type  => User, user => user.bancoClient)
+  @ManyToOne((type) => User, (user) => user.bancoClient)
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
   user_id: string;
 
-  @ManyToOne(type  => Banco, banco => banco.bancoClient)
+  @ManyToOne((type) => Banco, (banco) => banco.bancoClient, { eager: true })
   @JoinColumn({ name: 'banco_id', referencedColumnName: 'id' })
   banco: Banco;
 

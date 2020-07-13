@@ -3,17 +3,19 @@ import { getCustomRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import ChequeOperacao from '../models/ChequeOperacao';
-import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
-import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
+import CreateChequeOperacaoService from './CreateChequeOperacaoService';
+import UpdateChequeOperacaoService from './UpdateChequeOperacaoService';
 
 import Operacao from '../models/Operacao';
+import Client from '../models/Client';
 import OperacaoRepository from '../repositories/OperacaoRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   id: string;
   chequeOperacao: ChequeOperacao[];
-  client_id: number;
+  client: Client;
+  userId: string;
   situacao: string;
   percentual: number;
   tarifa: number;
@@ -30,8 +32,9 @@ interface Request {
 class UpdateOperacaoService {
   public async execute({
     id,
-    client_id,
+    client,
     chequeOperacao,
+    userId,
     situacao,
     percentual,
     tarifa,
@@ -48,17 +51,17 @@ class UpdateOperacaoService {
 
     const operacaoPrev = await operacaoRepository.findOne(id);
 
-    if(!operacaoPrev) {
-        throw new AppError('Não foi encontrato a Operação para Atualizar!!');
+    if (!operacaoPrev) {
+      throw new AppError('Não foi encontrato a Operação para Atualizar!!');
     }
 
-    const clientRepository = getCustomRepository(ClientsRepository);
-    const client = await clientRepository.findOne(client_id);
+    // const clientRepository = getCustomRepository(ClientsRepository);
+    // const client = await clientRepository.findOne(client_id);
 
-    if(client) {
-        operacaoPrev.client = client;
+    if (client) {
+      operacaoPrev.client = client;
     }
-    
+
     operacaoPrev.situacao = situacao;
     operacaoPrev.percentual = percentual;
     operacaoPrev.tarifa = tarifa;
@@ -70,24 +73,27 @@ class UpdateOperacaoService {
     operacaoPrev.total_liquido = total_liquido;
     operacaoPrev.total_outros = total_outros;
     operacaoPrev.obs = obs;
-    
-    const operacao =  await operacaoRepository.save(operacaoPrev);
 
-    chequeOperacao.map(async co => {
+    const operacao = await operacaoRepository.save(operacaoPrev);
+
+    chequeOperacao.map(async (co) => {
       co.operacao = operacao;
-      
-      if(client) {
+
+      if (client) {
         co.client = client;
       }
-      
-      if(co.id) {
+      if (user) {
+        co.user = user;
+      }
+
+      if (co.id) {
         const chequeOperacaoService = new UpdateChequeOperacaoService();
         await chequeOperacaoService.execute(co);
       } else {
         const chequeOperacaoService = new CreateChequeOperacaoService();
         await chequeOperacaoService.execute(co);
       }
-    })
+    });
 
     return operacao;
   }

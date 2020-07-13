@@ -36,20 +36,14 @@ telefoneClientRouter.get('/', async (request, response) => {
 });
 
 telefoneClientRouter.post('/', async (request, response) => {
-  const {
-    tipo,
-    numero,
-    client_id,
-    user_id,
-  } = request.body;
+  const { tipo, numero, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createTelefoneClientervice = new CreateTelefoneClientService();
   const telefoneClient = await createTelefoneClientervice.execute({
@@ -63,21 +57,14 @@ telefoneClientRouter.post('/', async (request, response) => {
 });
 
 telefoneClientRouter.put('/:id', async (request, response) => {
-  const {
-    id = request.params.id,
-    tipo,
-    numero,
-    client_id,
-    user_id,
-  } = request.body;
+  const { id = request.params.id, tipo, numero, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const updateTelefoneClientService = new UpdateTelefoneClientService();
   const telefoneClient = await updateTelefoneClientService.execute({

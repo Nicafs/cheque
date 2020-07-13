@@ -10,40 +10,26 @@ import Banco from '../models/Banco';
 import BancoClientRepository from '../repositories/BancoClientRepository';
 import CreateBancoClientService from '../services/CreateBancoClientService';
 import UpdateBancoClientService from '../services/UpdateBancoClientService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const bancoClientRouter = Router();
 
-// bancoClientRouter.use(ensureAuthenzticated);
-
 bancoClientRouter.get('/:id', async (request, response) => {
-  const bancoClientRepository = getCustomRepository(
-    BancoClientRepository,
-  );
-  const bancoClient = await bancoClientRepository.findOne(
-    request.params.id,
-  );
+  const bancoClientRepository = getCustomRepository(BancoClientRepository);
+  const bancoClient = await bancoClientRepository.findOne(request.params.id);
 
   return response.json(bancoClient);
 });
 
 bancoClientRouter.get('/', async (request, response) => {
-  const bancoClientRepository = getCustomRepository(
-    BancoClientRepository,
-  );
+  const bancoClientRepository = getCustomRepository(BancoClientRepository);
   const bancoClient = await bancoClientRepository.find();
 
   return response.json(bancoClient);
 });
 
 bancoClientRouter.post('/', async (request, response) => {
-  const {
-    agencia,
-    conta,
-    banco_id,
-    client_id,
-    user_id,
-  } = request.body;
+  const { agencia, conta, banco_id, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
@@ -51,10 +37,8 @@ bancoClientRouter.post('/', async (request, response) => {
   const bancoRepository = getRepository(Banco);
   const banco = await bancoRepository.findOne(banco_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createBancoClientService = new CreateBancoClientService();
   const bancoClient = await createBancoClientService.execute({
@@ -74,9 +58,10 @@ bancoClientRouter.put('/:id', async (request, response) => {
     agencia,
     conta,
     banco_id,
-    user_id,
     client_id,
   } = request.body;
+
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
@@ -84,10 +69,8 @@ bancoClientRouter.put('/:id', async (request, response) => {
   const bancoRepository = getRepository(Banco);
   const banco = await bancoRepository.findOne(banco_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const updateBancoClientService = new UpdateBancoClientService();
   const bancoClient = await updateBancoClientService.execute({
@@ -103,12 +86,8 @@ bancoClientRouter.put('/:id', async (request, response) => {
 });
 
 bancoClientRouter.delete('/:id', async (request, response) => {
-  const bancoClientRepository = getCustomRepository(
-    BancoClientRepository,
-  );
-  const bancoClient = await bancoClientRepository.findOne(
-    request.params.id,
-  );
+  const bancoClientRepository = getCustomRepository(BancoClientRepository);
+  const bancoClient = await bancoClientRepository.findOne(request.params.id);
 
   if (!bancoClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');

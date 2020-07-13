@@ -21,6 +21,7 @@ interface Request {
   valor_operacao: number;
   valor_encargos: number;
   emitente: string;
+  userId: string;
 }
 
 class UpdateChequeService {
@@ -38,21 +39,22 @@ class UpdateChequeService {
     valor_operacao,
     valor_encargos,
     emitente,
+    userId,
   }: Request): Promise<Cheque> {
     const chequesRepository = getCustomRepository(ChequesRepository);
 
     const chequePrev = await chequesRepository.findOne(id);
 
-    if(!chequePrev) {
-        throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    if (!chequePrev) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
-    if(chequePrev.numero !== numero) {
-        const findChequeNumero = await chequesRepository.findByCheque(numero);
+    if (chequePrev.numero !== numero) {
+      const findChequeNumero = await chequesRepository.findByCheque(numero);
 
-        if (findChequeNumero) {
+      if (findChequeNumero) {
         throw new AppError('Já existe o Número do Cheque Cadastrado');
-        }
+      }
     }
 
     const bancosRepository = getCustomRepository(BancosRepository);
@@ -60,10 +62,10 @@ class UpdateChequeService {
     const clientsRepository = getCustomRepository(ClientsRepository);
     const client = await clientsRepository.findOne(client_id);
 
-    if(banco) {
+    if (banco) {
       chequePrev.banco = banco;
     }
-    if(client) {
+    if (client) {
       chequePrev.client = client;
     }
     chequePrev.agencia = agencia;
@@ -77,7 +79,7 @@ class UpdateChequeService {
     chequePrev.valor_encargos = valor_encargos;
     chequePrev.emitente = emitente;
 
-    const cheque =  await chequesRepository.save(chequePrev);
+    const cheque = await chequesRepository.save(chequePrev);
 
     return cheque;
   }

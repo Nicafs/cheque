@@ -9,11 +9,8 @@ import User from '../models/User';
 import ReferenciaClientRepository from '../repositories/ReferenciaClientRepository';
 import CreateReferenciaClientService from '../services/CreateReferenciaClientService';
 import UpdateReferenciaClientService from '../services/UpdateReferenciaClientService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const referenciaClientRouter = Router();
-
-// referenciaClientRouter.use(ensureAuthenzticated);
 
 referenciaClientRouter.get('/:id', async (request, response) => {
   const referenciaClientRepository = getCustomRepository(
@@ -36,20 +33,14 @@ referenciaClientRouter.get('/', async (request, response) => {
 });
 
 referenciaClientRouter.post('/', async (request, response) => {
-  const {
-    nome,
-    telefone,
-    client_id,
-    user_id,
-  } = request.body;
+  const { nome, telefone, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createReferenciaClientService = new CreateReferenciaClientService();
   const referenciaClient = await createReferenciaClientService.execute({
@@ -63,21 +54,14 @@ referenciaClientRouter.post('/', async (request, response) => {
 });
 
 referenciaClientRouter.put('/:id', async (request, response) => {
-  const {
-    id = request.params.id,
-    nome,
-    telefone,
-    client_id,
-    user_id,
-  } = request.body;
+  const { id = request.params.id, nome, telefone, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const updateReferenciaClientService = new UpdateReferenciaClientService();
   const referenciaClient = await updateReferenciaClientService.execute({

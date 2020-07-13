@@ -7,18 +7,18 @@ import Client from '../models/Client';
 import User from '../models/User';
 
 interface Request {
-    tipo: string;
-    bairro: string;
-    cep: string;
-    cidade: string;
-    estado: string;
-    complemento: string;
-    tipo_logradouro: string;
-    logradouro: string;
-    numero: number;
-    referencia: string;
-    user: User | undefined;
-    client: Client | undefined;
+  tipo: string;
+  bairro: string;
+  cep: string;
+  cidade: string;
+  estado: string;
+  complemento: string;
+  tipo_logradouro: string;
+  logradouro: string;
+  numero: number;
+  referencia: string;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class CreateEnderecoClientService {
@@ -36,20 +36,21 @@ class CreateEnderecoClientService {
     user,
     client,
   }: Request): Promise<EnderecoClient> {
-      
     const enderecoClientRepository = getRepository(EnderecoClient);
-    const findEnderecoClient = await enderecoClientRepository.findOne({ where: { cep, cidade, estado, bairro, numero, logradouro, client}});
+    const findEnderecoClient = await enderecoClientRepository.findOne({
+      where: { cep, cidade, estado, bairro, numero, logradouro, client },
+    });
 
     if (findEnderecoClient) {
       throw new AppError('Já existe o endereço cadastrado');
     }
 
-    // if(!user) {
+    // if (!user) {
     //   const userRepository = getRepository(User);
-    //   user = await userRepository.findOne(user_id) as User;
+    //   user = (await userRepository.findOne(user_id)) as User;
     // }
 
-    if(!client) {
+    if (!client) {
       throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 

@@ -9,7 +9,7 @@ import Client from '../models/Client';
 import User from '../models/User';
 
 interface Request {
-  id: string,
+  id: string;
   tipo: string;
   numero: string;
   user: User | undefined;
@@ -24,31 +24,36 @@ class UpdateTelefoneService {
     user,
     client,
   }: Request): Promise<TelefoneClient> {
-    const telefoneClientRepository = getCustomRepository(TelefoneClientRepository);
+    const telefoneClientRepository = getCustomRepository(
+      TelefoneClientRepository,
+    );
 
     const telefonePrev = await telefoneClientRepository.findOne(id);
 
-    if(!telefonePrev) {
-        throw new AppError('Não foi encontrato o Telefone para Atualizar!!');
+    if (!telefonePrev) {
+      throw new AppError('Não foi encontrato o Telefone para Atualizar!!');
     }
 
-    if(!client) {
+    if (!client) {
       throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
-    if(telefonePrev?.numero !== numero) {
+    if (telefonePrev?.numero !== numero) {
       const client_id = client.id;
-        const findTelefone = await telefoneClientRepository.findByTelefone(numero, client_id);
+      const findTelefone = await telefoneClientRepository.findByTelefone(
+        numero,
+        client_id,
+      );
 
-        if (findTelefone) {
+      if (findTelefone) {
         throw new AppError('Já existe o Número de Telefone Cadastrado');
-        }
+      }
     }
 
     telefonePrev.tipo = tipo;
     telefonePrev.numero = numero;
 
-    const newTelefone =  await telefoneClientRepository.save(telefonePrev);
+    const newTelefone = await telefoneClientRepository.save(telefonePrev);
 
     return newTelefone;
   }

@@ -4,17 +4,14 @@ import { getCustomRepository, getRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 import ChequeOperacaoRepository from '../repositories/ChequeOperacaoRepository';
 import OperacaoRepository from '../repositories/OperacaoRepository';
-import UsersRepository from '../repositories/UsersRepository';
 
 import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
 import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
+
 import User from '../models/User';
 import Banco from '../models/Banco';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const chequeOperacaoRouter = Router();
-
-// chequeOperacaoRouter.use(ensureAuthenticated);
 
 chequeOperacaoRouter.get('/:id', async (request, response) => {
   const chequeOperacaoRepository = getCustomRepository(
@@ -39,7 +36,6 @@ chequeOperacaoRouter.get('/', async (request, response) => {
 chequeOperacaoRouter.post('/', async (request, response) => {
   const {
     operacao_id,
-    user_id,
     client,
     banco,
     tipo,
@@ -54,12 +50,13 @@ chequeOperacaoRouter.post('/', async (request, response) => {
     valor_encargos,
     emitente,
   } = request.body;
+  const { userId } = request.user;
 
   const operacaoRepository = getCustomRepository(OperacaoRepository);
   const operacao = await operacaoRepository.findOne(operacao_id);
 
-  const usersRepository = getCustomRepository(UsersRepository);
-  const user = await usersRepository.findOne(user_id);
+  const usersRepository = getRepository(User);
+  const user = await usersRepository.findOne(userId);
 
   const bancoRepository = getRepository(Banco);
   const bancoData = await bancoRepository.findOne(banco.id);
@@ -103,6 +100,7 @@ chequeOperacaoRouter.put('/:id', async (request, response) => {
     valor_encargos,
     emitente,
   } = request.body;
+  const { userId } = request.user;
 
   const updateChequeOperacaoService = new UpdateChequeOperacaoService();
 
@@ -120,6 +118,7 @@ chequeOperacaoRouter.put('/:id', async (request, response) => {
     valor_operacao,
     valor_encargos,
     emitente,
+    userId,
   });
 
   return response.json({ chequeOperacao });
@@ -134,7 +133,7 @@ chequeOperacaoRouter.delete('/:id', async (request, response) => {
   );
 
   if (!chequeOperacao) {
-    throw new AppError('Não foi encontrato o Banco para Deletar!!');
+    throw new AppError('Não foi encontrato o Cheque para Deletar!!');
   }
 
   const resposta = await chequeOperacaoRepository.remove(chequeOperacao);

@@ -5,14 +5,10 @@ import AppError from '../errors/AppError';
 
 import ChequeOperacao from '../models/ChequeOperacao';
 
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
-
 const chequeOperacaoQuitacaoRouter = Router();
 
-// chequeOperacaoRouter.use(ensureAuthenticated);
-
 chequeOperacaoQuitacaoRouter.put('/:id', async (request, response) => {
-  const id = parseInt(request.params.id);
+  const id = parseInt(request.params.id, 10);
   const chequeOperacaoRepository = getRepository(ChequeOperacao);
   const chequeOperacao = await chequeOperacaoRepository.findOne(id);
 
@@ -22,7 +18,9 @@ chequeOperacaoQuitacaoRouter.put('/:id', async (request, response) => {
 
   chequeOperacao.data_quitacao = new Date();
 
-  const updatedChequeOperacao =  await chequeOperacaoRepository.save(chequeOperacao);
+  const updatedChequeOperacao = await chequeOperacaoRepository.save(
+    chequeOperacao,
+  );
 
   return response.json(updatedChequeOperacao);
 });

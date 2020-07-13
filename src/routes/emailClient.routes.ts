@@ -9,47 +9,32 @@ import User from '../models/User';
 import EmailClientRepository from '../repositories/EmailClientRepository';
 import CreateEmailClientService from '../services/CreateEmailClientService';
 import UpdateEmailClientService from '../services/UpdateEmailClientService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const emailClientRouter = Router();
 
-// emailClientRouter.use(ensureAuthenzticated);
-
 emailClientRouter.get('/:id', async (request, response) => {
-  const emailClientRepository = getCustomRepository(
-    EmailClientRepository,
-  );
-  const emailClient = await emailClientRepository.findOne(
-    request.params.id,
-  );
+  const emailClientRepository = getCustomRepository(EmailClientRepository);
+  const emailClient = await emailClientRepository.findOne(request.params.id);
 
   return response.json(emailClient);
 });
 
 emailClientRouter.get('/', async (request, response) => {
-  const emailClientRepository = getCustomRepository(
-    EmailClientRepository,
-  );
+  const emailClientRepository = getCustomRepository(EmailClientRepository);
   const emailClient = await emailClientRepository.find();
 
   return response.json(emailClient);
 });
 
 emailClientRouter.post('/', async (request, response) => {
-  const {
-    email,
-    principal,
-    client_id,
-    user_id,
-  } = request.body;
+  const { email, principal, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createEmailClientService = new CreateEmailClientService();
   const emailClient = await createEmailClientService.execute({
@@ -63,21 +48,14 @@ emailClientRouter.post('/', async (request, response) => {
 });
 
 emailClientRouter.put('/:id', async (request, response) => {
-  const {
-    id = request.params.id,
-    email,
-    principal,
-    client_id,
-    user_id,
-  } = request.body;
+  const { id = request.params.id, email, principal, client_id } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const updateEmailClientService = new UpdateEmailClientService();
   const emailClient = await updateEmailClientService.execute({
@@ -92,12 +70,8 @@ emailClientRouter.put('/:id', async (request, response) => {
 });
 
 emailClientRouter.delete('/:id', async (request, response) => {
-  const emailClientRepository = getCustomRepository(
-    EmailClientRepository,
-  );
-  const emailClient = await emailClientRepository.findOne(
-    request.params.id,
-  );
+  const emailClientRepository = getCustomRepository(EmailClientRepository);
+  const emailClient = await emailClientRepository.findOne(request.params.id);
 
   if (!emailClient) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');

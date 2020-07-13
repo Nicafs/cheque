@@ -1,15 +1,14 @@
 import { Router } from 'express';
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 import BancosRepository from '../repositories/BancosRepository';
 import CreateBancoService from '../services/CreateBancoService';
 import UpdateBancoService from '../services/UpdateBancoService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
+import User from '../models/User';
 
 const bancosRouter = Router();
-
-// bancosRouter.use(ensureAuthenticated);
 
 bancosRouter.get('/:id', async (request, response) => {
   const bancosRepository = getCustomRepository(BancosRepository);
@@ -27,14 +26,18 @@ bancosRouter.get('/', async (request, response) => {
 
 bancosRouter.post('/', async (request, response) => {
   const { codigo, descricao, juros, prazo } = request.body;
+  const { userId } = request.user;
+
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createBancoService = new CreateBancoService();
-
   const banco = await createBancoService.execute({
     codigo,
     descricao,
     juros,
     prazo,
+    user,
   });
 
   return response.json({ banco });
@@ -49,14 +52,19 @@ bancosRouter.put('/:id', async (request, response) => {
     prazo,
   } = request.body;
 
-  const updateBancoService = new UpdateBancoService();
+  const { userId } = request.user;
 
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
+
+  const updateBancoService = new UpdateBancoService();
   const banco = await updateBancoService.execute({
     id,
     codigo,
     descricao,
     juros,
     prazo,
+    user,
   });
 
   return response.json({ banco });

@@ -1,5 +1,8 @@
 import { Router } from 'express';
 
+import ensureAuthenticated from '../middlewares/ensureAuthenticated';
+
+import sessionsRouter from './sessions.routes';
 import clientsRouter from './clients.routes';
 import enderecoClientRouter from './enderecoClient.routes';
 import telefoneClientRouter from './telefoneClient.routes';
@@ -15,6 +18,10 @@ import chequeOperacaoQuitacaoRouter from './chequeOperacaoQuitacao.routes';
 import operacaoRouter from './operacao.routes';
 
 const routes = Router();
+
+routes.use('/sessions', sessionsRouter);
+
+routes.use(ensureAuthenticated);
 
 routes.use('/users', usersRouter);
 routes.use('/clients', clientsRouter);

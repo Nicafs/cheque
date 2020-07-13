@@ -9,11 +9,8 @@ import User from '../models/User';
 import EnderecoClientRepository from '../repositories/EnderecoClientRepository';
 import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
 import UpdateEnderecoClientService from '../services/UpdateEnderecoClientService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const enderecoClientRouter = Router();
-
-// enderecoClientRouter.use(ensureAuthenzticated);
 
 enderecoClientRouter.get('/:id', async (request, response) => {
   const enderecoClientRepository = getCustomRepository(
@@ -47,17 +44,15 @@ enderecoClientRouter.post('/', async (request, response) => {
     logradouro,
     numero,
     referencia,
-    user_id,
     client_id,
   } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const createEnderecoClientService = new CreateEnderecoClientService();
   const enderecoClient = await createEnderecoClientService.execute({
@@ -91,17 +86,15 @@ enderecoClientRouter.put('/:id', async (request, response) => {
     logradouro,
     numero,
     referencia,
-    user_id,
     client_id,
   } = request.body;
+  const { userId } = request.user;
 
   const clientRepository = getRepository(Client);
   const client = await clientRepository.findOne(client_id);
 
-  // const userRepository = getRepository(User);
-  // const user = await userRepository.findOne(user_id);
-
-  const user = undefined;
+  const userRepository = getRepository(User);
+  const user = await userRepository.findOne(userId);
 
   const updateEnderecoClientService = new UpdateEnderecoClientService();
   const enderecoClient = await updateEnderecoClientService.execute({

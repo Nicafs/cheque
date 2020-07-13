@@ -12,11 +12,11 @@ import User from '../models/User';
 
 import ClientsRepository from '../repositories/ClientsRepository';
 
-import CreateBancoClientService from '../services/CreateBancoClientService';
-import CreateEnderecoClientService from '../services/CreateEnderecoClientService';
-import CreateTelefoneClientService from '../services/CreateTelefoneClientService';
-import CreateEmailClientService from '../services/CreateEmailClientService';
-import CreateReferenciaClientService from '../services/CreateReferenciaClientService';
+import CreateBancoClientService from './CreateBancoClientService';
+import CreateEnderecoClientService from './CreateEnderecoClientService';
+import CreateTelefoneClientService from './CreateTelefoneClientService';
+import CreateEmailClientService from './CreateEmailClientService';
+import CreateReferenciaClientService from './CreateReferenciaClientService';
 
 interface Request {
   type: string;
@@ -36,7 +36,7 @@ interface Request {
   local_trabalho: string;
   renda_mensal: number;
   cargo: string;
-  user_id: string;
+  userId: string;
   bancoClient: BancoClient[];
   enderecoClient: EnderecoClient[];
   telefoneClient: TelefoneClient[];
@@ -63,7 +63,7 @@ class CreateClientService {
     local_trabalho,
     renda_mensal,
     cargo,
-    user_id,
+    userId,
     bancoClient,
     enderecoClient,
     telefoneClient,
@@ -77,17 +77,18 @@ class CreateClientService {
     if (findClientCpf) {
       throw new AppError('Já existe o cpf cadastrado');
     }
-    
+
     const findClientRg = await clientsRepository.findByRg(rg);
 
     if (findClientRg) {
       throw new AppError('Já existe o rg cadastrado');
     }
 
-    let user: User;
-    if(user_id) {
-      const userRepository = getRepository(User);
-      user = await userRepository.findOne(user_id) as User;
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne(userId);
+
+    if (!user) {
+      throw new AppError('Usuário Inválido !');
     }
 
     const client = clientsRepository.create({
@@ -108,54 +109,56 @@ class CreateClientService {
       local_trabalho,
       renda_mensal,
       cargo,
+      user,
     });
-    
+
     await clientsRepository.save(client);
 
     const bancoClientService = new CreateBancoClientService();
-    bancoClient.map(async bc => {
+    bancoClient.map(async (bc) => {
       bc.client = client;
-      if(user) {
+      if (user) {
         bc.user = user;
       }
+
       await bancoClientService.execute(bc);
-    })
+    });
 
     const enderecoClientService = new CreateEnderecoClientService();
-    enderecoClient.map(async ec => {
+    enderecoClient.map(async (ec) => {
       ec.client = client;
-      if(user) {
+      if (user) {
         ec.user = user;
       }
       await enderecoClientService.execute(ec);
-    })
+    });
 
     const telefoneClientService = new CreateTelefoneClientService();
-    telefoneClient.map(async tc => {
+    telefoneClient.map(async (tc) => {
       tc.client = client;
-      if(user) {
+      if (user) {
         tc.user = user;
       }
       await telefoneClientService.execute(tc);
-    })
+    });
 
     const emailClientService = new CreateEmailClientService();
-    emailClient.map(async ec => {
+    emailClient.map(async (ec) => {
       ec.client = client;
-      if(user) {
+      if (user) {
         ec.user = user;
       }
       await emailClientService.execute(ec);
-    })
+    });
 
     const referenciaClientService = new CreateReferenciaClientService();
-    referenciaClient.map(async rc => {
+    referenciaClient.map(async (rc) => {
       rc.client = client;
-      if(user) {
+      if (user) {
         rc.user = user;
       }
       await referenciaClientService.execute(rc);
-    })
+    });
 
     return client;
   }

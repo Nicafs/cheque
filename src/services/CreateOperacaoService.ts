@@ -1,6 +1,6 @@
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
-// import AppError from '../errors/AppError';
+import AppError from '../errors/AppError';
 
 import Operacao from '../models/Operacao';
 import ChequeOperacao from '../models/ChequeOperacao';
@@ -13,7 +13,7 @@ import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   chequeOperacao: ChequeOperacao[];
-  user: User;
+  userId: string;
   client_id: number;
   situacao: string;
   percentual: number;
@@ -32,7 +32,7 @@ class CreateOperacaoService {
   public async execute({
     client_id,
     chequeOperacao,
-    user,
+    userId,
     situacao,
     percentual,
     tarifa,
@@ -49,7 +49,18 @@ class CreateOperacaoService {
 
     const clientRepository = getCustomRepository(ClientsRepository);
     const client = await clientRepository.findOne(client_id);
-    
+
+    if (!client) {
+      throw new AppError('Não encontrou o cliente');
+    }
+
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne(userId);
+
+    if (!user) {
+      throw new AppError('Usuário Inválido');
+    }
+
     const operacao = operacaoRepository.create({
       client,
       user,

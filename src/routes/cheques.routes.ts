@@ -5,11 +5,8 @@ import AppError from '../errors/AppError';
 import ChequesRepository from '../repositories/ChequesRepository';
 import CreateChequeService from '../services/CreateChequeService';
 import UpdateChequeService from '../services/UpdateChequeService';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const chequesRouter = Router();
-
-// chequesRouter.use(ensureAuthenticated);
 
 chequesRouter.get('/:id', async (request, response) => {
   const chequesRepository = getCustomRepository(ChequesRepository);
@@ -38,11 +35,11 @@ chequesRouter.post('/', async (request, response) => {
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
   } = request.body;
+  const { userId } = request.user;
 
   const createChequeService = new CreateChequeService();
-
   const cheque = await createChequeService.execute({
     client_id,
     banco_id,
@@ -55,14 +52,15 @@ chequesRouter.post('/', async (request, response) => {
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
+    userId,
   });
 
   return response.json({ cheque });
 });
 
 chequesRouter.put('/', async (request, response) => {
-  const { 
+  const {
     id,
     client_id,
     banco_id,
@@ -75,7 +73,9 @@ chequesRouter.put('/', async (request, response) => {
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente } = request.body;
+    emitente,
+  } = request.body;
+  const { userId } = request.user;
 
   const updateChequeService = new UpdateChequeService();
 
@@ -92,7 +92,8 @@ chequesRouter.put('/', async (request, response) => {
     data_quitacao,
     valor_operacao,
     valor_encargos,
-    emitente
+    emitente,
+    userId,
   });
 
   return response.json({ cheque });
@@ -102,7 +103,7 @@ chequesRouter.delete('/:id', async (request, response) => {
   const chequesRepository = getCustomRepository(ChequesRepository);
   const cheque = await chequesRepository.findOne(request.params.id);
 
-  if(!cheque) {
+  if (!cheque) {
     throw new AppError('Não foi encontrato o Banco para Deletar!!');
   }
 

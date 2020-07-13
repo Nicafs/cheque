@@ -17,11 +17,10 @@ export default function ensureAuthenticated(
   next: NextFunction,
 ): void {
   // Validação do Token JWT
-
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
-    throw new Error('Usuário não esta autenticado');
+    throw new AppError('Usuário não autenticado.', 401);
   }
 
   const [, token] = authHeader.split(' ');
@@ -34,7 +33,7 @@ export default function ensureAuthenticated(
     const { sub } = decoded as TokenPaylod;
 
     request.user = {
-      id: sub,
+      userId: sub,
     };
 
     return next();

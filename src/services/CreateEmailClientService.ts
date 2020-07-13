@@ -7,10 +7,10 @@ import Client from '../models/Client';
 import User from '../models/User';
 
 interface Request {
-    email: string;
-    principal: boolean;
-    user: User | undefined;
-    client: Client | undefined;
+  email: string;
+  principal: boolean;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class CreateEmailClienttService {
@@ -20,19 +20,20 @@ class CreateEmailClienttService {
     user,
     client,
   }: Request): Promise<EmailClient> {
-      
     const emailClientRepository = getRepository(EmailClient);
-    const findEmailClient = await emailClientRepository.findOne({ where: { email, client}});
+    const findEmailClient = await emailClientRepository.findOne({
+      where: { email, client },
+    });
 
     if (findEmailClient) {
       throw new AppError('Já existe o e-mail cadastrado');
     }
 
     const emailClient = emailClientRepository.create({
-        email,
-        principal,
-        user,
-        client,
+      email,
+      principal,
+      user,
+      client,
     });
 
     await emailClientRepository.save(emailClient);

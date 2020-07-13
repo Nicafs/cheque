@@ -8,11 +8,11 @@ import User from '../models/User';
 import Banco from '../models/Banco';
 
 interface Request {
-    agencia: number;
-    conta: number;
-    banco: Banco | undefined;
-    user: User | undefined;
-    client: Client | undefined;
+  agencia: number;
+  conta: number;
+  banco: Banco | undefined;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class CreateBancoClientService {
@@ -23,20 +23,21 @@ class CreateBancoClientService {
     user,
     client,
   }: Request): Promise<BancoClient> {
-      
     const bancoClientRepository = getRepository(BancoClient);
-    const findBancoClient = await bancoClientRepository.findOne({ where: { agencia, conta, banco, client}});
+    const findBancoClient = await bancoClientRepository.findOne({
+      where: { agencia, conta, banco, client },
+    });
 
     if (findBancoClient) {
       throw new AppError('Já existe o banco cadastrado');
     }
 
     const bancoClient = bancoClientRepository.create({
-        agencia,
-        conta,
-        banco,
-        user,
-        client,
+      agencia,
+      conta,
+      banco,
+      user,
+      client,
     });
 
     await bancoClientRepository.save(bancoClient);

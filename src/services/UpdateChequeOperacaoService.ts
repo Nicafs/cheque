@@ -13,11 +13,8 @@ import BancosRepository from '../repositories/BancosRepository';
 
 interface Request {
   id: number;
-  operacao: Operacao | undefined;
-  client: Client | undefined;
-  user: User | undefined;
-  banco: Banco | undefined;
   tipo: string;
+  banco: Banco | undefined;
   agencia: number;
   conta: number;
   numero: string;
@@ -28,6 +25,7 @@ interface Request {
   valor_operacao: number;
   valor_encargos: number;
   emitente: string;
+  user: User | undefined;
 }
 
 class UpdateChequeOperacaoService {
@@ -45,21 +43,26 @@ class UpdateChequeOperacaoService {
     valor_operacao,
     valor_encargos,
     emitente,
+    user,
   }: Request): Promise<ChequeOperacao> {
-    const chequeOperacaoRepository = getCustomRepository(ChequeOperacaoRepository);
+    const chequeOperacaoRepository = getCustomRepository(
+      ChequeOperacaoRepository,
+    );
 
     const chequeOperacaoPrev = await chequeOperacaoRepository.findOne(id);
 
-    if(!chequeOperacaoPrev) {
-        throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
+    if (!chequeOperacaoPrev) {
+      throw new AppError('Não foi encontrato o Cliente para Atualizar!!');
     }
 
-    if(chequeOperacaoPrev.numero !== numero) {
-        const findChequeOperacaoNumero = await chequeOperacaoRepository.findByChequeOperacao(numero);
+    if (chequeOperacaoPrev.numero !== numero) {
+      const findChequeOperacaoNumero = await chequeOperacaoRepository.findByChequeOperacao(
+        numero,
+      );
 
-        if (findChequeOperacaoNumero) {
+      if (findChequeOperacaoNumero) {
         throw new AppError('Já existe o Número do Cheque Cadastrado');
-        }
+      }
     }
 
     if (!banco) {
@@ -69,8 +72,8 @@ class UpdateChequeOperacaoService {
     const bancosRepository = getCustomRepository(BancosRepository);
     const bancoData = await bancosRepository.findOne(banco.id);
 
-    if(bancoData) {
-        chequeOperacaoPrev.banco = bancoData;
+    if (bancoData) {
+      chequeOperacaoPrev.banco = bancoData;
     }
     chequeOperacaoPrev.tipo = tipo;
     chequeOperacaoPrev.agencia = agencia;
@@ -84,7 +87,9 @@ class UpdateChequeOperacaoService {
     chequeOperacaoPrev.valor_encargos = valor_encargos;
     chequeOperacaoPrev.emitente = emitente;
 
-    const chequeOperacao =  await chequeOperacaoRepository.save(chequeOperacaoPrev);
+    const chequeOperacao = await chequeOperacaoRepository.save(
+      chequeOperacaoPrev,
+    );
 
     return chequeOperacao;
   }

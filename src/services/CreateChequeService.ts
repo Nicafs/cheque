@@ -1,4 +1,4 @@
-import { getCustomRepository } from 'typeorm';
+import { getCustomRepository, getRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 
@@ -6,7 +6,7 @@ import Cheque from '../models/Cheque';
 import ChequesRepository from '../repositories/ChequesRepository';
 import BancosRepository from '../repositories/BancosRepository';
 import ClientsRepository from '../repositories/ClientsRepository';
-
+import User from '../models/User';
 
 interface Request {
   client_id: string;
@@ -21,6 +21,7 @@ interface Request {
   valor_operacao: number;
   valor_encargos: number;
   emitente: string;
+  userId: string;
 }
 
 class CreateChequeService {
@@ -37,6 +38,7 @@ class CreateChequeService {
     valor_operacao,
     valor_encargos,
     emitente,
+    userId,
   }: Request): Promise<Cheque> {
     const chequesRepository = getCustomRepository(ChequesRepository);
 
@@ -48,8 +50,12 @@ class CreateChequeService {
 
     const bancosRepository = getCustomRepository(BancosRepository);
     const banco = await bancosRepository.findOne(banco_id);
+
     const clientsRepository = getCustomRepository(ClientsRepository);
     const client = await clientsRepository.findOne(client_id);
+
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne(userId);
 
     const cheque = chequesRepository.create({
       client,
@@ -64,6 +70,7 @@ class CreateChequeService {
       valor_operacao,
       valor_encargos,
       emitente,
+      user,
     });
 
     await chequesRepository.save(cheque);

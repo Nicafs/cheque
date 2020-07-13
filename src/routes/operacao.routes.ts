@@ -11,26 +11,23 @@ import CreateOperacaoService from '../services/CreateOperacaoService';
 import UpdateOperacaoService from '../services/UpdateOperacaoService';
 
 import ChequeOperacao from '../models/ChequeOperacao';
-// import ensureAuthenticated from '../middlewares/ensureAuthenticated';
 
 const OperacaoRouter = Router();
 
-// OperacaoRouter.use(ensureAuthenticated);
-
 OperacaoRouter.get('/:id', async (request, response) => {
-  const id = parseInt(request.params.id);
   const operacaoRepository = getRepository(Operacao);
 
-  const operacao = await operacaoRepository.find(
-    { where: { id: request.params.id }, 
-      relations: ["chequeOperacao"],
+  const operacao = await operacaoRepository.find({
+    where: { id: request.params.id },
+    relations: ['chequeOperacao'],
     join: {
-      alias: "operacao",
+      alias: 'operacao',
       leftJoinAndSelect: {
-        id: "operacao.client"
-      }
-    }});
-    
+        id: 'operacao.client',
+      },
+    },
+  });
+
   // const operacao = await operacaoRepository.findOne(id, { relations: ['chequeOperacao'] });
 
   return response.json(operacao[0]);
@@ -49,7 +46,6 @@ OperacaoRouter.post('/', async (request, response) => {
   const {
     client_id,
     chequeOperacao,
-    user,
     situacao,
     percentual,
     tarifa,
@@ -62,14 +58,14 @@ OperacaoRouter.post('/', async (request, response) => {
     total_outros,
     obs,
   } = request.body;
+  const { userId } = request.user;
 
   const createOperacaoService = new CreateOperacaoService();
 
-  console.log('Entrou no Create - body:', request.body);
   const operacao = await createOperacaoService.execute({
     client_id,
+    userId,
     chequeOperacao,
-    user,
     situacao,
     percentual,
     tarifa,
@@ -90,7 +86,7 @@ OperacaoRouter.put('/:id', async (request, response) => {
   const {
     id = request.params.id,
     chequeOperacao,
-    client_id,
+    client,
     situacao,
     percentual,
     tarifa,
@@ -103,13 +99,15 @@ OperacaoRouter.put('/:id', async (request, response) => {
     total_outros,
     obs,
   } = request.body;
+  const { userId } = request.user;
 
   const updateOperacaoService = new UpdateOperacaoService();
-  
+
   const operacao = await updateOperacaoService.execute({
     id,
     chequeOperacao,
-    client_id,
+    client,
+    userId,
     situacao,
     percentual,
     tarifa,
@@ -136,15 +134,15 @@ OperacaoRouter.delete('/:id', async (request, response) => {
   }
 
   const chequeOperacaoRepository = getRepository(ChequeOperacao);
-  await chequeOperacaoRepository.delete({ operacao: operacao });
+  await chequeOperacaoRepository.delete({ operacao });
 
   const removed = await operacaoRepository.remove(operacao);
 
-  if(!removed) {
+  if (!removed) {
     throw new AppError('Houve em erro inesperado!!');
   }
 
-  return response.json({msg: 'Foi excluido com Sucesso!'});
+  return response.json({ msg: 'Foi excluido com Sucesso!' });
 });
 
 export default OperacaoRouter;

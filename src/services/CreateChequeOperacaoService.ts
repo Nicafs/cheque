@@ -62,7 +62,7 @@ class CreateChequeOperacaoService {
     if (!banco) {
       throw new AppError('Informe um Banco para cadastro');
     }
-    
+
     const bancosRepository = getCustomRepository(BancosRepository);
     const bancoData = await bancosRepository.findOne(banco.id);
 
@@ -72,7 +72,7 @@ class CreateChequeOperacaoService {
       client,
       banco: bancoData,
       tipo,
-      agencia,  
+      agencia,
       conta,
       numero,
       dias,

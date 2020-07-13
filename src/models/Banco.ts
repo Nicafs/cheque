@@ -5,8 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
+import User from './User';
 import Cheque from './Cheque';
 import BancoClient from './BancoClient';
 
@@ -32,6 +35,10 @@ class Banco {
 
   @OneToMany(() => BancoClient, (bancoClient) => bancoClient.banco)
   bancoClient: BancoClient[];
+
+  @ManyToOne((type) => User, (user) => user.banco)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @CreateDateColumn()
   created_at: Date;

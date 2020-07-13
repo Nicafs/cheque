@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import Banco from './Banco';
 import Client from './Client';
 import Cheque from './Cheque';
 import Operacao from './Operacao';
@@ -29,10 +30,16 @@ class User {
   email: string;
 
   @Column()
+  username: string;
+
+  @Column()
   password: string;
 
   @OneToMany(() => Client, (client) => client.user)
   clients: Client[];
+
+  @OneToMany(() => Banco, (banco: Banco) => banco.user)
+  public banco: Banco[];
 
   @OneToMany(() => Cheque, (cheque: Cheque) => cheque.user)
   public cheque: Cheque[];

@@ -7,10 +7,10 @@ import Client from '../models/Client';
 import User from '../models/User';
 
 interface Request {
-    nome: string;
-    telefone: string;
-    user: User | undefined;
-    client: Client | undefined;
+  nome: string;
+  telefone: string;
+  user: User | undefined;
+  client: Client | undefined;
 }
 
 class CreateReferenciaClientService {
@@ -20,19 +20,24 @@ class CreateReferenciaClientService {
     user,
     client,
   }: Request): Promise<ReferenciaClient> {
-      
     const referenciaClientRepository = getRepository(ReferenciaClient);
-    const findreferenciaClient = await referenciaClientRepository.findOne({ where: { nome, telefone, client}});
+    const findreferenciaClient = await referenciaClientRepository.findOne({
+      where: { nome, telefone, client },
+    });
 
     if (findreferenciaClient) {
       throw new AppError('Já existe a referência cadastrado');
     }
 
+    if (!user) {
+      throw new AppError('Usuário Inválido');
+    }
+
     const referenciaClient = referenciaClientRepository.create({
-        nome,
-        telefone,
-        user,
-        client,
+      nome,
+      telefone,
+      user,
+      client,
     });
 
     await referenciaClientRepository.save(referenciaClient);
