@@ -17,6 +17,7 @@ chequeOperacaoQuitacaoRouter.put('/:id', async (request, response) => {
   }
 
   chequeOperacao.data_quitacao = new Date();
+  chequeOperacao.status = 'QUITADO';
 
   const updatedChequeOperacao = await chequeOperacaoRepository.save(
     chequeOperacao,

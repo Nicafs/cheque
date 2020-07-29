@@ -18,10 +18,8 @@ import chequeOperacaoQuitacaoRouter from './chequeOperacaoQuitacao.routes';
 import operacaoRouter from './operacao.routes';
 
 const routes = Router();
-console.log('Entrou no session antes');
 routes.use('/sessions', sessionsRouter);
 
-console.log('Entrou no session saiu');
 routes.use(ensureAuthenticated);
 
 routes.use('/users', usersRouter);

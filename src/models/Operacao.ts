@@ -9,7 +9,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import Banco from './Banco';
 import Client from './Client';
 import User from './User';
 import ChequeOperacao from './ChequeOperacao';

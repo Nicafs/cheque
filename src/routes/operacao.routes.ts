@@ -4,6 +4,7 @@ import { getCustomRepository, getRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import Operacao from '../models/Operacao';
+import Client from '../models/Client';
 
 import OperacaoRepository from '../repositories/OperacaoRepository';
 
@@ -13,6 +14,33 @@ import UpdateOperacaoService from '../services/UpdateOperacaoService';
 import ChequeOperacao from '../models/ChequeOperacao';
 
 const OperacaoRouter = Router();
+
+OperacaoRouter.get('/lastId', async (request, response) => {
+  const operacaoRepository = getRepository(Operacao);
+  const operacao = await operacaoRepository
+    .createQueryBuilder('operacoes')
+    .orderBy('id', 'DESC')
+    .getOne();
+
+  return response.json(operacao);
+});
+
+OperacaoRouter.get('/disponivel/:id', async (request, response) => {
+  const id = parseInt(request.params.id);
+
+  const clientRepository = getRepository(Client);
+  const operacao = await clientRepository
+    .createQueryBuilder('clients')
+    .leftJoin('clients.operacao', 'operacao')
+    .leftJoin('operacao.chequeOperacao', 'cheque', "cheque.status = 'QUITADO'")
+    .select('clients.id, clients.name, clients.limit')
+    .addSelect('SUM(cheque.valor_operacao)', 'disponivel')
+    .where({ id })
+    .groupBy('clients.id')
+    .getRawOne();
+
+  return response.json(operacao);
+});
 
 OperacaoRouter.get('/:id', async (request, response) => {
   const operacaoRepository = getRepository(Operacao);
