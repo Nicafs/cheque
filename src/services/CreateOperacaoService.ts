@@ -21,10 +21,6 @@ interface Request {
   data_operacao: Date;
   acrescimos: number;
   tarifa_bordero: number;
-  total_operacao: number;
-  total_encargos: number;
-  total_liquido: number;
-  total_outros: number;
   obs: string;
 }
 
@@ -39,10 +35,6 @@ class CreateOperacaoService {
     data_operacao,
     acrescimos,
     tarifa_bordero,
-    total_operacao,
-    total_encargos,
-    total_liquido,
-    total_outros,
     obs,
   }: Request): Promise<Operacao> {
     const operacaoRepository = getCustomRepository(OperacaoRepository);
@@ -61,6 +53,14 @@ class CreateOperacaoService {
       throw new AppError('Usuário Inválido');
     }
 
+    let total_operacao = parseFloat('0');
+    let total_encargos = parseFloat('0');
+
+    chequeOperacao.forEach((cheque) => {
+      total_operacao += parseFloat(cheque.valor_operacao.toString());
+      total_encargos += parseFloat(cheque.valor_encargos.toString());
+    });
+
     const operacao = operacaoRepository.create({
       client,
       user,
@@ -72,8 +72,8 @@ class CreateOperacaoService {
       tarifa_bordero,
       total_operacao,
       total_encargos,
-      total_liquido,
-      total_outros,
+      total_liquido: total_operacao - total_encargos,
+      total_outros: 0,
       obs,
     });
 

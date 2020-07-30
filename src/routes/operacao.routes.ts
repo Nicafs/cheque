@@ -32,9 +32,10 @@ OperacaoRouter.get('/disponivel/:id', async (request, response) => {
   const operacao = await clientRepository
     .createQueryBuilder('clients')
     .leftJoin('clients.operacao', 'operacao')
-    .leftJoin('operacao.chequeOperacao', 'cheque', "cheque.status = 'QUITADO'")
-    .select('clients.id, clients.name, clients.limit')
-    .addSelect('SUM(cheque.valor_operacao)', 'disponivel')
+    .leftJoin('operacao.chequeOperacao', 'cheque', "cheque.status != 'QUITADO'")
+    .select('clients.*')
+    .addSelect('clients.limit - SUM(cheque.valor_operacao)', 'disponivel')
+    .addSelect('SUM(cheque.valor_operacao)', 'total_operacao')
     .where({ id })
     .groupBy('clients.id')
     .getRawOne();
@@ -45,20 +46,36 @@ OperacaoRouter.get('/disponivel/:id', async (request, response) => {
 OperacaoRouter.get('/:id', async (request, response) => {
   const operacaoRepository = getRepository(Operacao);
 
-  const operacao = await operacaoRepository.find({
+  const operacao = await operacaoRepository.findOne({
     where: { id: request.params.id },
     relations: ['chequeOperacao'],
-    join: {
-      alias: 'operacao',
-      leftJoinAndSelect: {
-        id: 'operacao.client',
-      },
-    },
   });
+
+  if (!operacao) {
+    throw new AppError('Não foi encontrato a Operação!!');
+  }
+
+  const clientRepository = getRepository(Client);
+  const client = await clientRepository
+    .createQueryBuilder('clients')
+    .leftJoin('clients.operacao', 'operacao1')
+    .leftJoin(
+      'operacao1.chequeOperacao',
+      'cheque',
+      "cheque.status != 'QUITADO'",
+    )
+    .select('clients.*')
+    .addSelect('clients.limit - SUM(cheque.valor_operacao)', 'disponivel')
+    .addSelect('SUM(cheque.valor_operacao)', 'total_operacao')
+    .where('clients.id = :id', { id: operacao.client_id })
+    .groupBy('clients.id')
+    .getRawOne();
+
+  operacao.client = client;
 
   // const operacao = await operacaoRepository.findOne(id, { relations: ['chequeOperacao'] });
 
-  return response.json(operacao[0]);
+  return response.json(operacao);
 });
 
 OperacaoRouter.get('/', async (request, response) => {
@@ -80,10 +97,6 @@ OperacaoRouter.post('/', async (request, response) => {
     data_operacao,
     acrescimos,
     tarifa_bordero,
-    total_operacao,
-    total_encargos,
-    total_liquido,
-    total_outros,
     obs,
   } = request.body;
   const { userId } = request.user;
@@ -100,10 +113,6 @@ OperacaoRouter.post('/', async (request, response) => {
     data_operacao,
     acrescimos,
     tarifa_bordero,
-    total_operacao,
-    total_encargos,
-    total_liquido,
-    total_outros,
     obs,
   });
 
@@ -121,10 +130,6 @@ OperacaoRouter.put('/:id', async (request, response) => {
     data_operacao,
     acrescimos,
     tarifa_bordero,
-    total_operacao,
-    total_encargos,
-    total_liquido,
-    total_outros,
     obs,
   } = request.body;
   const { userId } = request.user;
@@ -142,10 +147,6 @@ OperacaoRouter.put('/:id', async (request, response) => {
     data_operacao,
     acrescimos,
     tarifa_bordero,
-    total_operacao,
-    total_encargos,
-    total_liquido,
-    total_outros,
     obs,
   });
 
