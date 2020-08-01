@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export default class CreateClients1591075595984 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -70,17 +75,17 @@ export default class CreateClients1591075595984 implements MigrationInterface {
           },
           {
             name: 'credit',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'limit',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'acrescimo',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
@@ -90,7 +95,7 @@ export default class CreateClients1591075595984 implements MigrationInterface {
           },
           {
             name: 'renda_mensal',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {

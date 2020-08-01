@@ -1,4 +1,9 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export default class CreateBancos1591676114478 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -30,12 +35,12 @@ export default class CreateBancos1591676114478 implements MigrationInterface {
           },
           {
             name: 'juros',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'prazo',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {

@@ -46,12 +46,12 @@ export default class CreateChequeOperacao1592543740360
           },
           {
             name: 'agencia',
-            type: 'numeric',
+            type: 'int',
             isNullable: false,
           },
           {
             name: 'conta',
-            type: 'numeric',
+            type: 'int',
             isNullable: false,
           },
           {
@@ -66,7 +66,7 @@ export default class CreateChequeOperacao1592543740360
           },
           {
             name: 'status',
-            type: 'numeric',
+            type: 'varchar',
             isNullable: true,
           },
           {
@@ -81,12 +81,12 @@ export default class CreateChequeOperacao1592543740360
           },
           {
             name: 'valor_operacao',
-            type: 'numeric',
+            type: 'float',
             isNullable: false,
           },
           {
             name: 'valor_encargos',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {

@@ -35,12 +35,12 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           },
           {
             name: 'agencia',
-            type: 'numeric',
+            type: 'int',
             isNullable: true,
           },
           {
             name: 'conta',
-            type: 'numeric',
+            type: 'int',
             isNullable: true,
           },
           {
@@ -50,7 +50,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           },
           {
             name: 'dias',
-            type: 'numeric',
+            type: 'int',
             isNullable: false,
           },
           {
@@ -70,12 +70,12 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           },
           {
             name: 'valor_operacao',
-            type: 'numeric',
+            type: 'float',
             isNullable: false,
           },
           {
             name: 'valor_encargos',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {

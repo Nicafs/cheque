@@ -35,12 +35,12 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
           },
           {
             name: 'percentual',
-            type: 'numeric',
+            type: 'float',
             isNullable: false,
           },
           {
             name: 'tarifa',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
@@ -50,32 +50,32 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
           },
           {
             name: 'acrescimos',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'tarifa_bordero',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'total_operacao',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'total_encargos',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'total_liquido',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
             name: 'total_outros',
-            type: 'numeric',
+            type: 'float',
             isNullable: true,
           },
           {
