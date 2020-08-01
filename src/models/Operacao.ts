@@ -38,31 +38,31 @@ class Operacao {
   @Column()
   situacao: string;
 
-  @Column()
+  @Column('int')
   percentual: number;
 
-  @Column()
+  @Column('int')
   tarifa: number;
 
   @Column('timestamp')
   data_operacao: Date;
 
-  @Column()
+  @Column('int')
   acrescimos: number;
 
-  @Column()
+  @Column('int')
   tarifa_bordero: number;
 
-  @Column()
+  @Column('int')
   total_operacao: number;
 
-  @Column()
+  @Column('int')
   total_encargos: number;
 
-  @Column()
+  @Column('int')
   total_liquido: number;
 
-  @Column()
+  @Column('int')
   total_outros: number;
 
   @Column()
