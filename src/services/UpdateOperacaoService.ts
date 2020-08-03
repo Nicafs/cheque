@@ -67,7 +67,6 @@ class UpdateOperacaoService {
       total_operacao += vo;
       total_encargos += ve;
     });
-    console.log('total_encargos:', total_encargos);
 
     operacaoPrev.situacao = situacao;
     operacaoPrev.percentual = percentual;

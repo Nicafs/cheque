@@ -16,6 +16,7 @@ import chequeOperacaoRouter from './chequeOperacao.routes';
 import historicoOperacoesRouter from './historicoOperacoes.routes';
 import chequeOperacaoQuitacaoRouter from './chequeOperacaoQuitacao.routes';
 import operacaoRouter from './operacao.routes';
+import configuracaoRouter from './configuracao.routes';
 
 const routes = Router();
 routes.use('/sessions', sessionsRouter);
@@ -35,5 +36,6 @@ routes.use('/chequeOperacao', chequeOperacaoRouter);
 routes.use('/chequeOperacao/quitacao', chequeOperacaoQuitacaoRouter);
 routes.use('/historicoOperacoes', historicoOperacoesRouter);
 routes.use('/operacoes', operacaoRouter);
+routes.use('/configuracao', configuracaoRouter);
 
 export default routes;

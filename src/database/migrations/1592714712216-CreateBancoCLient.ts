@@ -5,9 +5,9 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export default class CreateBancoCLient1592714712216
+export default class CreateBancoClient1592714712216
   implements MigrationInterface {
-  name = 'CreateBancoCLient1592714712216';
+  name = 'CreateBancoClient1592714712216';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
