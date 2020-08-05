@@ -59,12 +59,16 @@ class CreateChequeOperacaoService {
       throw new AppError('Já existe o Número do Cheque Cadastrado');
     }
 
-    if (!banco) {
+    if (!banco && tipo === 'cheque') {
       throw new AppError('Informe um Banco para cadastro');
     }
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const bancoData = await bancosRepository.findOne(banco.id);
+    let bancoData;
+
+    if (banco && tipo === 'cheque') {
+      const bancosRepository = getCustomRepository(BancosRepository);
+      bancoData = await bancosRepository.findOne(banco.id);
+    }
 
     const chequeOperacao = chequeOperacaoRepository.create({
       operacao,
@@ -72,8 +76,8 @@ class CreateChequeOperacaoService {
       client,
       banco: bancoData,
       tipo,
-      agencia,
-      conta,
+      agencia: bancoData ? agencia : 0,
+      conta: bancoData ? conta : 0,
       numero,
       dias,
       status,

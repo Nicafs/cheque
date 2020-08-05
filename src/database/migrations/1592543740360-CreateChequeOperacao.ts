@@ -22,7 +22,7 @@ export default class CreateChequeOperacao1592543740360
           {
             name: 'banco_id',
             type: 'int',
-            isNullable: false,
+            isNullable: true,
           },
           {
             name: 'operacao_id',

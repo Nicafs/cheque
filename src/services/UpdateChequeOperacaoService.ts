@@ -2,9 +2,7 @@ import { getCustomRepository } from 'typeorm';
 
 import AppError from '../errors/AppError';
 
-import Operacao from '../models/Operacao';
 import User from '../models/User';
-import Client from '../models/Client';
 import Banco from '../models/Banco';
 import ChequeOperacao from '../models/ChequeOperacao';
 
@@ -65,19 +63,24 @@ class UpdateChequeOperacaoService {
       }
     }
 
-    if (!banco) {
+    if (!banco && tipo === 'cheque') {
       throw new AppError('Informe um Banco para cadastro');
     }
 
-    const bancosRepository = getCustomRepository(BancosRepository);
-    const bancoData = await bancosRepository.findOne(banco.id);
+    let bancoData;
+
+    if (banco && tipo === 'cheque') {
+      const bancosRepository = getCustomRepository(BancosRepository);
+      bancoData = await bancosRepository.findOne(banco.id);
+    }
 
     if (bancoData) {
       chequeOperacaoPrev.banco = bancoData;
     }
+
     chequeOperacaoPrev.tipo = tipo;
-    chequeOperacaoPrev.agencia = agencia;
-    chequeOperacaoPrev.conta = conta;
+    chequeOperacaoPrev.agencia = bancoData ? agencia : 0;
+    chequeOperacaoPrev.conta = bancoData ? conta : 0;
     chequeOperacaoPrev.numero = numero;
     chequeOperacaoPrev.dias = dias;
     chequeOperacaoPrev.status = status;

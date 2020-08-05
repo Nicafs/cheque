@@ -3,8 +3,6 @@ import { getCustomRepository } from 'typeorm';
 import AppError from '../errors/AppError';
 
 import ChequeOperacao from '../models/ChequeOperacao';
-import CreateChequeOperacaoService from './CreateChequeOperacaoService';
-import UpdateChequeOperacaoService from './UpdateChequeOperacaoService';
 
 import Operacao from '../models/Operacao';
 import Client from '../models/Client';
@@ -54,14 +52,8 @@ class UpdateOperacaoService {
 
     let total_operacao = parseFloat('0');
     let total_encargos = parseFloat('0');
-    console.log('chequeOperacao:', chequeOperacao);
+    
     chequeOperacao.forEach((cheque) => {
-      console.log('cheque.100:', 1 / 100);
-      console.log('cheque.valor_encargos:', cheque.valor_encargos);
-      console.log(
-        'parseFloat(cheque.valor_encargos.toString()):',
-        parseFloat(cheque.valor_encargos.toString()),
-      );
       const vo = parseFloat(cheque.valor_operacao.toString());
       const ve = parseFloat(cheque.valor_encargos.toString());
       total_operacao += vo;
@@ -81,25 +73,6 @@ class UpdateOperacaoService {
     operacaoPrev.obs = obs;
 
     const operacao = await operacaoRepository.save(operacaoPrev);
-
-    chequeOperacao.map(async (co) => {
-      co.operacao = operacao;
-
-      if (operacaoPrev.client) {
-        co.client = operacaoPrev.client;
-      }
-      if (operacaoPrev.user) {
-        co.user = operacaoPrev.user;
-      }
-
-      if (co.id) {
-        const chequeOperacaoService = new UpdateChequeOperacaoService();
-        await chequeOperacaoService.execute(co);
-      } else {
-        const chequeOperacaoService = new CreateChequeOperacaoService();
-        await chequeOperacaoService.execute(co);
-      }
-    });
 
     return operacao;
   }

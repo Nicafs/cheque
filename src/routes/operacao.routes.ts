@@ -8,6 +8,9 @@ import Client from '../models/Client';
 
 import OperacaoRepository from '../repositories/OperacaoRepository';
 
+import CreateChequeOperacaoService from '../services/CreateChequeOperacaoService';
+import UpdateChequeOperacaoService from '../services/UpdateChequeOperacaoService';
+
 import CreateOperacaoService from '../services/CreateOperacaoService';
 import UpdateOperacaoService from '../services/UpdateOperacaoService';
 
@@ -34,8 +37,8 @@ OperacaoRouter.get('/disponivel/:id', async (request, response) => {
     .leftJoin('clients.operacao', 'operacao')
     .leftJoin('operacao.chequeOperacao', 'cheque', "cheque.status != 'QUITADO'")
     .select('clients.*')
-    .addSelect('clients.limit - SUM(cheque.valor_operacao)', 'disponivel')
-    .addSelect('SUM(cheque.valor_operacao)', 'total_operacao')
+    .addSelect('clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))', 'disponivel')
+    .addSelect('SUM(COALESCE(cheque.valor_operacao, 0))', 'total_operacao')
     .where({ id })
     .groupBy('clients.id')
     .getRawOne();
@@ -65,14 +68,13 @@ OperacaoRouter.get('/:id', async (request, response) => {
       "cheque.status != 'QUITADO'",
     )
     .select('clients.*')
-    .addSelect('clients.limit - SUM(cheque.valor_operacao)', 'disponivel')
-    .addSelect('SUM(cheque.valor_operacao)', 'total_operacao')
+    .addSelect('clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))', 'disponivel')
+    .addSelect('SUM(COALESCE(cheque.valor_operacao, 0))', 'total_operacao')
     .where('clients.id = :id', { id: operacao.client_id })
     .groupBy('clients.id')
     .getRawOne();
 
   operacao.client = client;
-
   // const operacao = await operacaoRepository.findOne(id, { relations: ['chequeOperacao'] });
 
   return response.json(operacao);
@@ -136,20 +138,48 @@ OperacaoRouter.put('/:id', async (request, response) => {
 
   const updateOperacaoService = new UpdateOperacaoService();
 
-  const operacao = await updateOperacaoService.execute({
-    id,
-    chequeOperacao,
-    client,
-    userId,
-    situacao,
-    percentual,
-    tarifa,
-    data_operacao,
-    acrescimos,
-    tarifa_bordero,
-    obs,
-  });
+  async function operacoes() {
+    return await updateOperacaoService.execute({
+      id,
+      chequeOperacao,
+      client,
+      userId,
+      situacao,
+      percentual,
+      tarifa,
+      data_operacao,
+      acrescimos,
+      tarifa_bordero,
+      obs,
+    });
+  }
+  
+  const operacao = operacoes().then(async operacao => {
+    const cheque = await chequeOperacao.map(async (co: ChequeOperacao) => {
+      co.operacao = operacao;
+  
+      if (operacao.client) {
+        co.client = operacao.client;
+      }
+      if (operacao.user) {
+        co.user = operacao.user;
+      }
+      
+      let cheque;
+      if (co.id) {
+        const chequeOperacaoService = new UpdateChequeOperacaoService();
+        cheque = await chequeOperacaoService.execute(co);
+      } else {
+        const chequeOperacaoService = new CreateChequeOperacaoService();
+        cheque = await chequeOperacaoService.execute(co);
+      }
+  
+      return cheque;
+    });
 
+    return operacao.chequeOperacao = cheque;
+  });
+  
   return response.json({ operacao });
 });
 
