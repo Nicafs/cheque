@@ -7,18 +7,18 @@ import AppError from './errors/AppError';
 
 import './database';
 
+var http = require('http');
+
 const cors = require('cors');
 
 const app = express();
 const porta = 21176;
 
-var http = require('http');
-
 app.use(cors());
 app.use(express.json());
 app.use(routes);
 
-app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
+app.use((err, request, response, _) => {
   if (err instanceof AppError) {
     return response.status(err.statusCode).json({
       status: 'error',
