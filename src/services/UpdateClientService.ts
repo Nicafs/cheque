@@ -25,7 +25,7 @@ interface Request {
   local_trabalho: string;
   renda_mensal: number;
   cargo: string;
-  userId: string;
+  userId: number;
 }
 
 class UpdateClientService {

@@ -33,7 +33,7 @@ export default class CreateBancoClient1592714712216
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

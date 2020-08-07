@@ -28,7 +28,7 @@ export default class CreateReferenciaClient1592714701397
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

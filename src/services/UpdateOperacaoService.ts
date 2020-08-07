@@ -12,7 +12,7 @@ interface Request {
   id: string;
   chequeOperacao: ChequeOperacao[];
   client: Client;
-  userId: string;
+  userId: number;
   situacao: string;
   percentual: number;
   tarifa: number;

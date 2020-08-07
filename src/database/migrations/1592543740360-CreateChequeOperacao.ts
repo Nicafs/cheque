@@ -36,7 +36,7 @@ export default class CreateChequeOperacao1592543740360
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

@@ -21,7 +21,7 @@ interface Request {
   valor_operacao: number;
   valor_encargos: number;
   emitente: string;
-  userId: string;
+  userId: number;
 }
 
 class UpdateChequeService {

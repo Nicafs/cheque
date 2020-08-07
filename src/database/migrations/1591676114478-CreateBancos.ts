@@ -20,7 +20,7 @@ export default class CreateBancos1591676114478 implements MigrationInterface {
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

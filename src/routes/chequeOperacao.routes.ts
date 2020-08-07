@@ -102,6 +102,13 @@ chequeOperacaoRouter.put('/:id', async (request, response) => {
   } = request.body;
   const { userId } = request.user;
 
+  const userRepository = getRepository(User);
+    const user = await userRepository.findOne(userId);
+
+    if (!user) {
+      throw new AppError('Usuário Inválido !');
+    }
+
   const updateChequeOperacaoService = new UpdateChequeOperacaoService();
 
   const chequeOperacao = await updateChequeOperacaoService.execute({
@@ -118,7 +125,7 @@ chequeOperacaoRouter.put('/:id', async (request, response) => {
     valor_operacao,
     valor_encargos,
     emitente,
-    userId,
+    user,
   });
 
   return response.json({ chequeOperacao });

@@ -28,7 +28,7 @@ export default class CreateEnderecoClient1592714584275
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

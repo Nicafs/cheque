@@ -33,7 +33,7 @@ class BancoClient {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: User;
 
-  user_id: string;
+  user_id: number;
 
   @ManyToOne((type) => Banco, (banco) => banco.bancoClient, { eager: true })
   @JoinColumn({ name: 'banco_id', referencedColumnName: 'id' })

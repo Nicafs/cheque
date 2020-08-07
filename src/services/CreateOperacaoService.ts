@@ -13,7 +13,7 @@ import ClientsRepository from '../repositories/ClientsRepository';
 
 interface Request {
   chequeOperacao: ChequeOperacao[];
-  userId: string;
+  userId: number;
   client_id: number;
   situacao: string;
   percentual: number;

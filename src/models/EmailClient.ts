@@ -32,7 +32,7 @@ class EmailClient {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  user_id: string;
+  user_id: number;
 
   @CreateDateColumn()
   created_at: Date;

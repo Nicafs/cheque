@@ -25,7 +25,7 @@ export default class CreateOperacao1592543714792 implements MigrationInterface {
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

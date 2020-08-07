@@ -39,3 +39,5 @@ routes.use('/operacoes', operacaoRouter);
 routes.use('/configuracao', configuracaoRouter);
 
 export default routes;
+
+module.exports = routes;

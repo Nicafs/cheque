@@ -30,7 +30,7 @@ export default class CreateCheques1591676133487 implements MigrationInterface {
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

@@ -28,7 +28,7 @@ export default class CreateEmailClient1592714667066
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {

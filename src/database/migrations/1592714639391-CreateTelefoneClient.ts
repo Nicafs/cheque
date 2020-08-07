@@ -28,7 +28,7 @@ export default class CreateTelefoneClient1592714639391
           },
           {
             name: 'user_id',
-            type: 'uuid',
+            type: 'int',
             isNullable: false,
           },
           {
