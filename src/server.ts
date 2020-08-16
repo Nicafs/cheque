@@ -12,7 +12,7 @@ const cors = require('cors');
 const app = express();
 const porta = 21176;
 
-var http = require('http');
+// var http = require('http');
 
 app.use(cors());
 app.use(express.json());
@@ -34,8 +34,8 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   });
 });
 
-const baseDir = `${__dirname}/build/`
-app.use(express.static(`${baseDir}`))
-app.get('/', (req, res) => res.sendfile('index.html' , { root : baseDir } ))
+// const baseDir = `${__dirname}/build/`
+// app.use(express.static(`${baseDir}`))
+// app.get('/', (req, res) => res.sendfile('index.html' , { root : baseDir } ))
 
 app.listen(porta);
