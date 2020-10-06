@@ -1,21 +1,26 @@
 {
   "type": "postgres",
-  "host": "localhost",
+  "host": "pgsql01-farm76.kinghost.net",
   "port": 5432,
-  "username": "postgres",
-  "password": "admin",
-  "database": "cheque",
+  "username": "unibrasilfactory",
+  "password": "gc6j3gtq62",
+  "database": "unibrasilfactory",
   "entities": [
     "./dist/models/*{.ts,.js}",
     "./src/models/*{.ts,.js}",
     "./models/*{.ts,.js}"
   ],
   "migrations": [
-    "./src/database/migrations/*.ts"
+    "./dist/database/migrations/*{.ts,.js}",
+    "./src/database/migrations/*{.ts,.js}",
+    "./database/migrations/*{.ts,.js}"
   ],
   "cli": {
-    "migrationsDir": "./src/database/migrations"
+    "migrationsDir": [
+      "./dist/database/migrations",
+      "./src/database/migrations",
+      "./database/migrations"
+    ]
   },
   "logging": true
 }
-

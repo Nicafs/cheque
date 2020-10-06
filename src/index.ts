@@ -11,7 +11,7 @@ const path = require("path");
 const cors = require('cors');
 
 const app = express();
-const porta = process.env.PORT_APP || 21130;
+const porta = process.env.PORT_APP || 21574;
 
 var http = require('http');
 
