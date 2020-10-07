@@ -10,7 +10,10 @@ import './database';
 const cors = require('cors');
 
 const app = express();
-const porta = 21176;
+
+const porta = process.env.PORT_APP || 21574;
+
+var http = require('http');
 
 app.use(cors());
 app.use(express.json());

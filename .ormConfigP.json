@@ -1,13 +1,12 @@
 {
   "type": "postgres",
-  "host": "localhost",
-  "port": 5434,
-  "username": "postgres",
-  "password": "cheque123",
-  "database": "cheque",
+  "host": "pgsql01-farm76.kinghost.net",
+  "port": 5432,
+  "username": "unibrasilfactory",
+  "password": "gc6j3gtq62",
+  "database": "unibrasilfactory",
   "entities": [
     "./dist/models/*{.ts,.js}",
-
     "./src/models/*{.ts,.js}",
     "./models/*{.ts,.js}"
   ],

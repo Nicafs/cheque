@@ -72,16 +72,20 @@ class CreateClientService {
   }: Request): Promise<Client> {
     const clientsRepository = getCustomRepository(ClientsRepository);
 
-    const findClientCpf = await clientsRepository.findByCpf(cpf);
+    if(cpf) {
+      const findClientCpf = await clientsRepository.findByCpf(cpf);
 
-    if (findClientCpf) {
-      throw new AppError('Já existe o cpf cadastrado');
+      if (findClientCpf) {
+        throw new AppError('Já existe o cpf cadastrado');
+      }
     }
 
-    const findClientRg = await clientsRepository.findByRg(rg);
+    if(rg) {
+      const findClientRg = await clientsRepository.findByRg(rg);
 
-    if (findClientRg) {
-      throw new AppError('Já existe o rg cadastrado');
+      if (findClientRg) {
+        throw new AppError('Já existe o rg cadastrado');
+      }
     }
 
     const userRepository = getRepository(User);
