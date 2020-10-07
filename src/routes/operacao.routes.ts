@@ -37,7 +37,10 @@ OperacaoRouter.get('/disponivel/:id', async (request, response) => {
     .leftJoin('clients.operacao', 'operacao')
     .leftJoin('operacao.chequeOperacao', 'cheque', "cheque.status != 'QUITADO'")
     .select('clients.*')
-    .addSelect('clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))', 'disponivel')
+    .addSelect(
+      'clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))',
+      'disponivel',
+    )
     .addSelect('SUM(COALESCE(cheque.valor_operacao, 0))', 'total_operacao')
     .where({ id })
     .groupBy('clients.id')
@@ -68,7 +71,10 @@ OperacaoRouter.get('/:id', async (request, response) => {
       "cheque.status != 'QUITADO'",
     )
     .select('clients.*')
-    .addSelect('clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))', 'disponivel')
+    .addSelect(
+      'clients.limit - SUM(COALESCE(cheque.valor_operacao, 0))',
+      'disponivel',
+    )
     .addSelect('SUM(COALESCE(cheque.valor_operacao, 0))', 'total_operacao')
     .where('clients.id = :id', { id: operacao.client_id })
     .groupBy('clients.id')
@@ -153,18 +159,18 @@ OperacaoRouter.put('/:id', async (request, response) => {
       obs,
     });
   }
-  
-  const operacao = operacoes().then(async operacao => {
+
+  const operacao = operacoes().then(async (operacao) => {
     const cheque = await chequeOperacao.map(async (co: ChequeOperacao) => {
       co.operacao = operacao;
-  
+
       if (operacao.client) {
         co.client = operacao.client;
       }
       if (operacao.user) {
         co.user = operacao.user;
       }
-      
+
       let cheque;
       if (co.id) {
         const chequeOperacaoService = new UpdateChequeOperacaoService();
@@ -173,13 +179,13 @@ OperacaoRouter.put('/:id', async (request, response) => {
         const chequeOperacaoService = new CreateChequeOperacaoService();
         cheque = await chequeOperacaoService.execute(co);
       }
-  
+
       return cheque;
     });
 
-    return operacao.chequeOperacao = cheque;
+    return (operacao.chequeOperacao = cheque);
   });
-  
+
   return response.json({ operacao });
 });
 

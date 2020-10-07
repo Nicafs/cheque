@@ -11,8 +11,8 @@ configuracaoRouter.get('/', async (request, response) => {
   const configuracaoRepository = getRepository(Configuracao);
 
   const configuracao = await configuracaoRepository.findOne();
-  
-  if(configuracao) {
+
+  if (configuracao) {
     delete configuracao.logo;
   }
 
@@ -62,7 +62,7 @@ configuracaoRouter.post('/', async (request, response) => {
     endNumero,
     endReferencia,
   });
-  
+
   await configuracaoRepository.save(configuracao);
 
   return response.json({ configuracao });

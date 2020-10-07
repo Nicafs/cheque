@@ -66,7 +66,7 @@ clientsRouter.post('/', async (request, response) => {
     referenciaClient,
   } = request.body;
   const { userId } = request.user;
-
+  console.log('userId:', userId);
   const createClientService = new CreateClientService();
   const client = await createClientService.execute({
     type,

@@ -13,7 +13,7 @@ const app = express();
 
 const porta = process.env.PORT_APP || 21574;
 
-var http = require('http');
+const http = require('http');
 
 app.use(cors());
 app.use(express.json());
@@ -39,4 +39,6 @@ const baseDir = `${__dirname}/build/`;
 app.use(express.static(`${baseDir}`));
 app.get('/', (req, res) => res.sendfile('index.html', { root: baseDir }));
 
-app.listen(porta);
+app.listen(porta, () => {
+  console.log(`Ouvindo na porta:${porta}`);
+});

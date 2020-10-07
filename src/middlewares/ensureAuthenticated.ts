@@ -33,7 +33,7 @@ export default function ensureAuthenticated(
     const { sub } = decoded as TokenPaylod;
 
     request.user = {
-      userId: parseInt(sub),
+      userId: parseInt(sub, 10),
     };
 
     return next();
