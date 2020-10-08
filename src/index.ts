@@ -17,7 +17,7 @@ const http = require('http');
 
 app.use(cors());
 app.use(express.json());
-app.use(routes);
+app.use('/api', routes);
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
   if (err instanceof AppError) {
@@ -37,7 +37,7 @@ app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
 
 const baseDir = `${__dirname}/build/`;
 app.use(express.static(`${baseDir}`));
-app.get('/', (req, res) => res.sendfile('index.html', { root: baseDir }));
+app.get('/*', (req, res) => res.sendfile('index.html', { root: baseDir }));
 
 app.listen(porta, () => {
   console.log(`Ouvindo na porta:${porta}`);
